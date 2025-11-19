@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <title> Profile | Click</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <!-- Bootstrap -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+              rel="stylesheet" crossorigin="anonymous">
+
+        <!-- Icons -->
+        <link rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+        <style>
+            :root {
+                --orange:   #F58F29;
+                --blue:     #058ED9;
+                --honey:    #E5F4E3;
+                --duke:     #2708A0;
+                --dark:     #212529;
+            }
+
+            body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                min-height: 100vh;
+                display: flex;
+                background-color: white;
+            }
+
+            .sidebar {
+                width: 80px;
+                background-color: var(--dark);
+                color: white;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding-top: 15px;
+            }
+
+            .sidebar .logo {
+                width: 45px;
+                height: 45px;
+                border-radius: 50%;
+                margin-bottom: 20px;
+            }
+
+            .sidebar .nav-link {
+                color: var(--blue);
+                font-weight: 500;
+                text-align: center;
+                margin: 8px 0;
+                transition: 0.3s;
+                font-size: 13px;
+            }
+
+            .sidebar .nav-link i {
+                display: block;
+                font-size: 20px;
+                margin-bottom: 3px;
+            }
+
+            .sidebar .nav-link:hover {
+                color: white;
+                background-color: var(--orange);
+                border-radius: 8px;
+                width: 60%;
+            }
+            .main-container {
+                flex: 1;
+                min-width: 0;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            .top-navbar {
+                background-color: var(--dark);
+                padding: 18px;
+            }
+
+            .top-navbar .form-control {
+                height: 38px;
+                border: 2px solid var(--honey);
+                background-color: white;
+            }
+
+            .create-btn {
+                background-color: var(--orange);
+                border: none;
+                color: white;
+                padding: 7px 16px;
+                border-radius: 8px;
+                font-weight: bold;
+            }
+
+            .create-btn:hover {
+                background-color: #d9791f;
+            }
+
+            .hero {
+                width: 100%;
+                height: 420px;
+                border-radius: 15px;
+                overflow: hidden;
+                background-size: cover;
+                background-position: center;
+                margin-bottom: 30px;
+                position: relative;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.20);
+                border: 3px solid var(--blue);
+            }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: rgba(0,0,0,0.45);
+                backdrop-filter: blur(2px);
+            }
+
+            .hero-center-text {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                color: white;
+                font-size: 34px;
+                font-weight: bold;
+                padding: 20px;
+                line-height: 1.3;
+                text-shadow: 0 3px 6px rgba(0,0,0,0.6);
+                z-index: 3;
+            }
+
+            .content {
+                padding: 25px;
+                overflow-y: auto;
+            }
+
+            .content-title {
+                margin-bottom: 15px;
+                font-weight: bold;
+                color: var(--duke);
+            }
+
+            .thumbnail {
+                position: relative;
+                padding-top: 150%;
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+                background-color: white;
+            }
+
+            .thumbnail img {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                background-color: var(--duke);
+            }
+
+            .film-title {
+                text-align: center;
+                margin-top: 8px;
+                font-weight: bold;
+                color: var(--duke);
+            }
+
+            .bg-blue {
+                background-color: var(--blue);
+            }
+
+            .text-blue {
+                color: var(--blue);
+            }
+
+            .text-duke {
+                color: var(--duke);
+            }
+
+            .bg-blue {
+                background-color: var(--blue);
+            }
+
+            .btn-orange {
+                background-color: var(--orange);
+                color: white;
+                border: none;
+                transition: background-color 0.3s ease;
+            }
+
+            .btn-orange:hover {
+                background-color: #d9791f;
+            }
+
+            
+      /* --- ESTRELLAS --- */
+      .stars {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 8px;
+      }
+
+      .stars i {
+        color: #ddd;
+        transition: color 0.3s;
+        font-size: 22px;
+        cursor: pointer;
+      }
+
+      .stars i.active {
+        color: gold;
+      }
+
+      /* --- MODAL ESTILOS --- */
+      .modal-content {
+        border: 3px solid var(--blue);
+        border-radius: 12px;
+      }
+
+      .modal-header {
+        background-color: var(--blue);
+        color: white;
+        border-radius: 10px 10px 0 0;
+      }
+
+      .btn-orange {
+        background-color: var(--orange);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 8px;
+      }
+
+      .btn-orange:hover {
+        background-color: #e56f26;
+      }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="sidebar">
+            
+            <img
+            
+                    src="../assets/Icono.png"
+                    alt="Logo"
+                    class="logo"
+            />
+            
+
+            <a href="PW_Profile.html" class="nav-link">
+                <i class="fas fa-user"></i>Profile
+            </a>
+
+            <a href="PW_Home.html" class="nav-link">
+                <i class="fas fa-home"></i>Home
+            </a>
+
+            
+            <a href="PW_Search.html" class="nav-link">
+                <i class="fas fa-film"></i>Movie
+            </a>
+       
+
+            <a href="PW_settings.html" class="nav-link">
+                <i class="fas fa-cog"></i>Setting
+            </a>
+
+            <a href="PW_help.html" class="nav-link">
+                <i class="fas fa-question-circle"></i>Help
+            </a>
+        </div>
+
+        <div class="main-container">
+            <nav class="navbar navbar-dark top-navbar">
+                <div class="container-fluid d-flex align-items-center justify-content-between">
+                    <form class="d-flex w-75">
+                        <input class="form-control" type="text" placeholder="Search...">
+                    </form>
+                    <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
+                        + Create
+                    </button>
+                     <button class="btn text-white ms-3" id="logoutBtn" title="Cerrar sesión">
+                        <i class="fas fa-sign-out-alt fa-lg"></i>
+                    </button>
+                </div>
+            </nav>
+
+                        <!-- MODAL CONFIRMAR CIERRE DE SESIÓN -->
+            <div class="modal fade" id="modalLogout" tabindex="-1" aria-labelledby="modalLogoutLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header bg-blue text-white">
+                    <h5 class="modal-title fw-bold" id="modalLogoutLabel">
+                    <i class="fas fa-sign-out-alt me-2"></i> Confirmar cierre de sesión
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <p class="fw-semibold text-duke mb-2">¿Estás seguro de que deseas cerrar sesión?
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                    Cancelar
+                    </button>
+                    <button type="button" class="btn-orange px-4" id="confirmLogout">
+                    Cerrar sesión
+                    </button>
+                </div>
+                </div>
+            </div>
+            </div>
+            <!-- Aquí está la imagen del perfil, el nombre y el boton para editar -->
+            <div style="display: flex; align-items: center; gap: 15px; margin-top: 20px; margin-left: 40px;">
+                <img src="../assets/Yeezus.jpeg" alt="profilePicture" class="rounded-circle" style="height: 200px; width: 200px; object-fit: cover;">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <h1 id="userName" style="margin: 0;">NAME</h1>
+                    <button class="btn bg-dark border-dark text-white" title="Editar" type="button" data-bs-toggle="modal" data-bs-target="#editUserModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabla de contenido de este usuario -->
+            <div class="mt-5 ms-3 d-flex justify-content-center" style="margin-right: 20px; flex-grow: 1; padding-right: 20px;">
+                <div class="text-center" style="border: 3px solid var(--dark); border-radius: 10px; padding: 20px; width: 90%; max-width: 1200px;">
+                    <div class="mb-3 d-flex justify-content-between gap-0">
+                        <button class="btn btn-orange w-100" style="border-radius: 10px 0 0 10px;">Reviews</button>
+                        <button class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 0 0 0;">Comments</button>
+                        <button class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 10px 10px 0;">Likes</button>
+                    </div>
+
+                    <div style="text-transform: uppercase; font-weight: bold; color: var(--dark); margin-bottom: 10px;">
+                        THIS MOVIE IS COOL
+                    </div>
+
+                    <div class="d-flex align-items-start" style="font-size: 14px; color: #212529;">
+                        <img src="../assets/TronLegacyPoster.jpeg" alt="Tron Legacy Poster" style="width: 150px; height: auto; margin-right: 20px;">
+                        <div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit cursus mollis. Suspendisse potenti. Nulla facilisi.
+                                Vivamus sit amet semper lacus, in mollis libero. Donec sed odio dui. Nulla vitae elit libero, a pharetra augue. Curabitur blandit tempus porttitor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+        <!-- Modal para editar el perfil -->
+        <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content" style="border: 3px solid var(--blue); border-radius: 12px;">
+
+                    <div class="px-4 pt-4 pb-2 border-bottom" style="background-color: var(--blue); border-radius: 10px 10px 0 0;">
+                        <h5 class="modal-title text-white fw-bold" id="editUserModalLabel">Editar perfil</h5>
+                    </div>
+
+                    <div class="px-4 pt-3">
+                        <label for="newUserName" class="form-label text-duke fw-bold">Nuevo nombre</label>
+                        <input type="text" class="form-control border-2" id="newUserName" placeholder="Escribe tu nuevo nombre..." style="border-color: var(--blue);">
+                    </div>
+
+                    <div class="modal-footer px-4 pb-4 border-0">
+                        <button type="button" class="btn btn-orange w-100 fw-bold" data-bs-dismiss="modal">Guardar cambio</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- MODAL CREAR RESEÑA -->
+    <div
+      class="modal fade"
+      id="modalResena"
+      tabindex="-1"
+      aria-labelledby="modalResenaLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title fw-bold" id="modalResenaLabel">Crear reseña</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body px-4">
+            <div class="mb-3">
+              <label for="buscarPelicula" class="form-label fw-bold">Buscar película</label>
+              <div class="input-group">
+                <span class="input-group-text bg-primary text-white border-0">
+                  <i class="fas fa-search"></i>
+                </span>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="buscarPelicula"
+                  placeholder="Buscar película..."
+                />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="tituloResena" class="form-label">Título</label>
+              <input
+                type="text"
+                class="form-control"
+                id="tituloResena"
+                placeholder="Escribe el título..."
+              />
+            </div>
+            <div class="mb-3">
+              <label for="cuerpoResena" class="form-label">Reseña</label>
+              <textarea
+                class="form-control"
+                id="cuerpoResena"
+                rows="5"
+                placeholder="Escribe tu reseña..."
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="modal-footer border-0 px-4 pb-4">
+            <button type="button" class="btn-orange w-100 fw-bold" id="btnPublicar">
+              Publicar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const logoutBtn = document.getElementById("logoutBtn");
+                const logoutModal = new bootstrap.Modal(document.getElementById("modalLogout"));
+                const confirmLogout = document.getElementById("confirmLogout");
+
+                // Mostrar modal
+                logoutBtn.addEventListener("click", () => {
+                logoutModal.show();
+                });
+
+                // Redirigir al login al confirmar
+                confirmLogout.addEventListener("click", () => {
+                window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
+                });
+            });
+    </script>
+    
+    </body>
+</html>
