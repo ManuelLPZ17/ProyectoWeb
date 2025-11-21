@@ -1,546 +1,377 @@
 <!doctype html>
 <html lang="es">
-    <head>
-        <title>Home | Cineclick</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+    <title>Home | Cineclick</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        <!-- Bootstrap -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
-              rel="stylesheet" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" crossorigin="anonymous">
 
-        <!-- Icons -->
-        <link rel="stylesheet"
-              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
-        <style>
-            :root {
-                --orange:   #F58F29;
-                --blue:     #058ED9;
-                --honey:    #E5F4E3;
-                --duke:     #2708A0;
-                --dark:     #212529;
-            }
+    <style>
+        :root {
+            --orange: #F58F29;
+            --blue: #058ED9;
+            --honey: #E5F4E3;
+            --duke: #2708A0;
+            --dark: #212529;
+        }
 
-            body {
-                margin: 0;
-                font-family: Arial, sans-serif;
-                min-height: 100vh;
-                display: flex;
-                background: linear-gradient(145deg, var(--blue), var(--orange));
-                min-height: 100vh;
-            }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            background: linear-gradient(145deg, var(--blue), var(--orange));
+            min-height: 100vh;
+        }
 
-            .sidebar {
-                width: 80px;
-                background-color: var(--dark);
-                color: white;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding-top: 15px;
-            }
+        /* SIDEBAR */
+        .sidebar {
+            width: 80px;
+            background-color: var(--dark);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 15px;
 
-            .sidebar .logo {
-                width: 45px;
-                height: 45px;
-                border-radius: 50%;
-                margin-bottom: 20px;
-            }
+            height: 100vh;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
 
-            .sidebar .nav-link {
-                color: var(--blue);
-                font-weight: 500;
-                text-align: center;
-                margin: 8px 0;
-                transition: 0.3s;
-                font-size: 13px;
-            }
+        .sidebar .logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+        }
 
-            .sidebar .nav-link i {
-                display: block;
-                font-size: 20px;
-                margin-bottom: 3px;
-            }
+        .sidebar .nav-link {
+            color: var(--blue);
+            font-weight: 500;
+            text-align: center;
+            margin: 8px 0;
+            transition: 0.3s;
+            font-size: 13px;
+        }
 
-            .sidebar .nav-link:hover {
-                color: white;
-                background-color: var(--orange);
-                border-radius: 8px;
-                width: 60%;
-            }
-            .main-container {
-                flex: 1;
-                min-width: 0;
-                display: flex;
-                flex-direction: column;
-                overflow: hidden;
-            }
+        .sidebar .nav-link i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 3px;
+        }
 
-            .top-navbar {
-                background-color: var(--dark);
-                padding: 18px;
-            }
+        .sidebar .nav-link:hover {
+            color: white;
+            background-color: var(--orange);
+            border-radius: 8px;
+            width: 60%;
+        }
 
-            .top-navbar .form-control {
-                height: 38px;
-                border: 2px solid var(--honey);
-                background-color: white;
-            }
+        /* MAIN */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
 
-            .create-btn {
-                background-color: var(--orange);
-                border: none;
-                color: white;
-                padding: 7px 16px;
-                border-radius: 8px;
-                font-weight: bold;
-            }
+            margin-left: 80px;
+            width: calc(100% - 80px);
+        }
 
-            .create-btn:hover {
-                background-color: #d9791f;
-            }
+        .top-navbar {
+            background-color: var(--dark);
+            padding: 18px;
+        }
 
-            .hero {
-                width: 100%;
-                height: 420px;
-                border-radius: 15px;
-                overflow: hidden;
-                background-size: cover;
-                background-position: center;
-                margin-bottom: 30px;
-                position: relative;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.20);
-                border: 3px solid var(--blue);
-            }
+        .top-navbar .form-control {
+            height: 38px;
+            border: 2px solid var(--honey);
+            background-color: white;
+        }
 
-            .hero::before {
-                content: "";
-                position: absolute;
-                inset: 0;
-                background: rgba(0,0,0,0.45);
-                backdrop-filter: blur(2px);
-            }
+        .create-btn {
+            background-color: var(--orange);
+            border: none;
+            color: white;
+            padding: 7px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
 
-            .hero-center-text {
-                position: absolute;
-                inset: 0;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                text-align: center;
-                color: white;
-                font-size: 34px;
-                font-weight: bold;
-                padding: 20px;
-                line-height: 1.3;
-                text-shadow: 0 3px 6px rgba(0,0,0,0.6);
-                z-index: 3;
-            }
-          .hero-text-wrapper {
-    position: absolute;
-    top: 25%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    z-index: 3;
-    gap: 15px; /* separa los textos */
-}
+        .create-btn:hover {
+            background-color: #d9791f;
+        }
 
-.hero-text-main {
-    color: white;
-    font-size: 42px;
-    font-weight: 800;
-    text-shadow: 0 3px 6px rgba(0,0,0,0.6);
-}
+        /* HERO */
+        .hero {
+            width: 100%;
+            height: 420px;
+            border-radius: 15px;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.20);
+            border: 3px solid var(--blue);
 
-.hero-text-sub {
-    color: #ffffffcc;
-    font-size: 20px;
-    font-weight: 300;
-    letter-spacing: 1px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-}
+            background-image: url('https://image.tmdb.org/t/p/w1280/lU5Z1Vw7t1T38p1i8151D8oA13D.jpg');
+        }
 
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(5,142,217,0.7), rgba(245,143,41,0.7));
+            backdrop-filter: blur(4px);
+        }
 
-            .content {
-                padding: 25px;
-                overflow-y: auto;
-            }
+        .hero-text-wrapper {
+            position: absolute;
+            top: 20%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 3;
+            gap: 15px;
+        }
 
-            .content-title {
-                margin-bottom: 15px;
-                font-weight: bold;
-                color: var(--duke);
-            }
+        .hero-text-main {
+            color: white;
+            font-size: 42px;
+            font-weight: 800;
+            text-shadow: 0 3px 6px rgba(0,0,0,0.6);
+        }
 
-            .thumbnail {
-                position: relative;
-                padding-top: 150%;
-                border-radius: 8px;
-                overflow: hidden;
-                box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-                background-color: white;
-            }
+        .hero-text-sub {
+            color: #ffffffcc;
+            font-size: 20px;
+            font-weight: 300;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
 
-            .thumbnail img {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                background-color: var(--duke);
-            }
+        .content {
+            padding: 25px;
+            overflow-y: auto;
+        }
 
-            .film-title {
-                text-align: center;
-                margin-top: 8px;
-                font-weight: bold;
-                color: var(--duke);
-            }
+        .content-title {
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--duke);
+        }
 
-            .bg-blue {
-                background-color: var(--blue);
-            }
+        /* CARDS */
+        .thumbnail {
+            position: relative;
+            padding-top: 150%;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+            background-color: var(--dark);
+        }
 
-            .text-blue {
-                color: var(--blue);
-            }
+        .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
 
-            .text-duke {
-                color: var(--duke);
-            }
+        .film-title {
+            text-align: center;
+            margin-top: 8px;
+            font-weight: bold;
+            color: var(--duke);
+        }
 
-            .bg-blue {
-                background-color: var(--blue);
-            }
+        .stars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 8px;
+        }
 
-            .btn-orange {
-                background-color: var(--orange);
-                color: white;
-                border: none;
-                transition: background-color 0.3s ease;
-            }
+        .stars i {
+            color: #ddd;
+            transition: color 0.3s;
+            font-size: 16px;
+        }
 
-            .btn-orange:hover {
-                background-color: #d9791f;
-            }
+        .stars i.active {
+            color: gold;
+        }
 
-            
-      /* --- ESTRELLAS --- */
-      .stars {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        margin-top: 8px;
-      }
+        /* MODALES */
+        .modal-content {
+            border: 3px solid var(--blue);
+            border-radius: 12px;
+        }
 
-      .stars i {
-        color: #ddd;
-        transition: color 0.3s;
-        font-size: 22px;
-        cursor: pointer;
-      }
+        .modal-header {
+            background-color: var(--blue);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
 
-      .stars i.active {
-        color: gold;
-      }
+        .btn-orange {
+            background-color: var(--orange);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 8px;
+        }
 
-      /* --- MODAL ESTILOS --- */
-      .modal-content {
-        border: 3px solid var(--blue);
-        border-radius: 12px;
-      }
+        .btn-orange:hover {
+            background-color: #e56f26;
+        }
+    </style>
+</head>
 
-      .modal-header {
-        background-color: var(--blue);
-        color: white;
-        border-radius: 10px 10px 0 0;
-      }
+<body>
 
-      .btn-orange {
-        background-color: var(--orange);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 8px;
-      }
+    <div class="sidebar">
+        <img src="../assets/Icono.png" alt="Logo" class="logo" />
+        <a href="PW_Profile.html" class="nav-link"><i class="fas fa-user"></i>Profile</a>
+        <a href="PW_Home.html" class="nav-link"><i class="fas fa-home"></i>Home</a>
+        <a href="PW_Search.html" class="nav-link"><i class="fas fa-film"></i>Movie</a>
+        <a href="PW_settings.html" class="nav-link"><i class="fas fa-cog"></i>Setting</a>
+        <a href="PW_help.html" class="nav-link"><i class="fas fa-question-circle"></i>Help</a>
+    </div>
 
-      .btn-orange:hover {
-        background-color: #e56f26;
-      }
+    <div class="main-container">
 
-        </style>
-    </head>
+        <!-- NAVBAR -->
+        <nav class="navbar navbar-dark top-navbar">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <form class="d-flex w-75">
+                    <input class="form-control" type="text" placeholder="Search...">
+                </form>
 
-    <body>
+                <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
+                    + Create
+                </button>
 
-        <div class="sidebar">
-            <img
-                    src="../assets/Icono.png"        
-                    alt="Logo"
-                    class="logo"
-            />
+                <button class="btn text-white ms-3" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt fa-lg"></i>
+                </button>
+            </div>
+        </nav>
 
-            <a href="PW_Profile.html" class="nav-link">
-                <i class="fas fa-user"></i>Profile
-            </a>
-
-            <a href="PW_Home.html" class="nav-link">
-                <i class="fas fa-home"></i>Home
-            </a>
-
-            <a href="PW_Search.html" class="nav-link">
-                <i class="fas fa-film"></i>Movie
-            </a>
-        
-
-            <a href="PW_settings.html" class="nav-link">
-                <i class="fas fa-cog"></i>Setting
-            </a>
-
-            <a href="PW_help.html" class="nav-link">
-                <i class="fas fa-question-circle"></i>Help
-            </a>
-        </div>
-
-        <div class="main-container">
-            <nav class="navbar navbar-dark top-navbar">
-                <div class="container-fluid d-flex align-items-center justify-content-between">
-                    <form class="d-flex w-75">
-                        <input class="form-control" type="text" placeholder="Search...">
-                    </form>
-                    <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
-                        + Create
-                    </button>
-                    <button class="btn text-white ms-3" id="logoutBtn" title="Cerrar sesión">
-                        <i class="fas fa-sign-out-alt fa-lg"></i>
-                    </button>
-                    
-                </div>
-            </nav>
-            <!-- MODAL CONFIRMAR CIERRE DE SESIÓN -->
-            <div class="modal fade" id="modalLogout" tabindex="-1" aria-labelledby="modalLogoutLabel" aria-hidden="true">
+        <!-- MODAL LOGOUT -->
+        <div class="modal fade" id="modalLogout" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
-                <div class="modal-header bg-blue text-white">
-                    <h5 class="modal-title fw-bold" id="modalLogoutLabel">
-                    <i class="fas fa-sign-out-alt me-2"></i> Confirmar cierre de sesión
-                    </h5>
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold">
+                            <i class="fas fa-sign-out-alt me-2"></i> Confirmar cierre de sesión
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body text-center">
+                        <p class="fw-semibold">¿Estás seguro de que deseas cerrar sesión?</p>
+                    </div>
+
+                    <div class="modal-footer border-0 justify-content-center pb-4">
+                        <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                            Cancelar
+                        </button>
+                        <button type="button" class="btn-orange px-4" id="confirmLogout">
+                            Cerrar sesión
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENIDO -->
+        <div class="content">
+
+            <h4 class="content-title">For you</h4>
+
+            <div class="hero">
+                <div class="hero-text-wrapper">
+                    <div class="hero-text-main">
+                        Cada película deja una huella.<br>
+                        Captura la tuya.
+                    </div>
+                    <div class="hero-text-sub">
+                        Haz que tu diario de cine cobre vida.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3" id="forYouContainer">
+                <p class="text-secondary ps-3">Cargando sugerencias...</p>
+            </div>
+
+            <h4 class="content-title mt-4">Trends</h4>
+
+            <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3" id="trendsContainer">
+                <p class="text-secondary ps-3">Cargando tendencias...</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL RESEÑA -->
+    <div class="modal fade" id="modalResena" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">Crear reseña</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body text-center">
-                    <p class="fw-semibold text-duke mb-2">¿Estás seguro de que deseas cerrar sesión?
+                <div class="modal-body px-4">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Buscar película</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-primary text-white border-0">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="buscarPelicula" placeholder="Buscar película..." />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" id="tituloResena" placeholder="Escribe el título..." />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Reseña</label>
+                        <textarea class="form-control" id="cuerpoResena" rows="5" placeholder="Escribe tu reseña..."></textarea>
+                    </div>
                 </div>
 
-                <div class="modal-footer border-0 justify-content-center pb-4">
-                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
-                    Cancelar
+                <div class="modal-footer border-0 px-4 pb-4">
+                    <button type="button" class="btn-orange w-100 fw-bold" id="btnPublicar">
+                        Publicar
                     </button>
-                    <button type="button" class="btn-orange px-4" id="confirmLogout">
-                    Cerrar sesión
-                    </button>
-                </div>
-                </div>
-            </div>
-            </div>
-            <div class="content">
-                
-                <h4 class="content-title">For you</h4>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
-                    <!-- Repite este bloque para cada cartel -->
-                <div class="hero" style="background-image:url('https://th.bing.com/th/id/OIP._plitNgPuATaaH3e8cfZ0AHaEo?w=303&h=189&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3');">
-
-                   <div class="hero-text-wrapper">
-    <div class="hero-text-main">
-        Cada película deja una huella.<br>
-        Captura la tuya.
-    </div>
-
-    <div class="hero-text-sub">
-        Haz que tu diario de cine cobre vida.
-    </div>
-</div>
-
-
                 </div>
 
-               
-
-
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    
-                    
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a><a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a><a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a><a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Puedes duplicar este bloque para más carteles -->
-                </div>
-
-                <h4 class="content-title mt-4">Trends</h4>
-                <div class="row row-cols-2 row-cols-sm-3 row-cols-md-5 g-3">
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="PW_Movie.html" class="text-decoration-none">
-                        <div class="card bg-transparent border-0 poster-card">
-                            <img src="https://th.bing.com/th/id/OIP.g7Rb9JsRDoBfn9D82GZ6fgHaLD?w=204&h=305&c=7&r=0&o=7&cb=ucfimgc2&dpr=1.3&pid=1.7&rm=3" class="card-img-top rounded shadow-sm" alt="Poster 1">
-                            <div class="card-body p-2 text-center">
-                                <p class="card-title fw-bold text-dark mb-0">Volver al futuro</p>
-                            </div>
-                        </div>
-                    </a>
-                    <!-- Repite según sea necesario -->
-                </div>
             </div>
         </div>
-
-        <!-- MODAL CREAR RESEÑA -->
-    <div
-      class="modal fade"
-      id="modalResena"
-      tabindex="-1"
-      aria-labelledby="modalResenaLabel"
-      aria-hidden="true"
-    >
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title fw-bold" id="modalResenaLabel">Crear reseña</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-          </div>
-
-          <div class="modal-body px-4">
-            <div class="mb-3">
-              <label for="buscarPelicula" class="form-label fw-bold">Buscar película</label>
-              <div class="input-group">
-                <span class="input-group-text bg-primary text-white border-0">
-                  <i class="fas fa-search"></i>
-                </span>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="buscarPelicula"
-                  placeholder="Buscar película..."
-                />
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="tituloResena" class="form-label">Título</label>
-              <input
-                type="text"
-                class="form-control"
-                id="tituloResena"
-                placeholder="Escribe el título..."
-              />
-            </div>
-            <div class="mb-3">
-              <label for="cuerpoResena" class="form-label">Reseña</label>
-              <textarea
-                class="form-control"
-                id="cuerpoResena"
-                rows="5"
-                placeholder="Escribe tu reseña..."
-              ></textarea>
-            </div>
-          </div>
-
-          <div class="modal-footer border-0 px-4 pb-4">
-            <button type="button" class="btn-orange w-100 fw-bold" id="btnPublicar">
-              Publicar
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-   
-        <script>
-            document.addEventListener("DOMContentLoaded", () => {
-                const logoutBtn = document.getElementById("logoutBtn");
-                const logoutModal = new bootstrap.Modal(document.getElementById("modalLogout"));
-                const confirmLogout = document.getElementById("confirmLogout");
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="home_api.js"></script>
 
-                // Mostrar modal
-                logoutBtn.addEventListener("click", () => {
-                logoutModal.show();
-                });
-
-                // Redirigir al login al confirmar
-                confirmLogout.addEventListener("click", () => {
-                window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
-                });
-            });
-    </script>
-
-    </body>
+</body>
 </html>
