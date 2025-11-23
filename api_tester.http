@@ -37,3 +37,60 @@ content-type: application/json
 }
 
 //
+
+
+// ==========================
+// 🚀 TAGS CRUD TEST
+// ==========================
+
+// 🔵 1. Crear Tag (POST)
+// Requiere autenticación: header x-auth
+### 
+POST http://localhost:3000/api/tags HTTP/1.1
+content-type: application/json
+x-auth: 1
+
+{
+    "name": "Acción",
+    "color": "#ff0000"
+}
+
+
+
+// 🔵 2. Obtener todas las tags (GET)
+// Requiere autenticación
+###
+GET http://localhost:3000/api/tags HTTP/1.1
+x-auth: 1
+
+
+
+// 🔵 3. Obtener Tag por ID (GET)
+// Cambia el ID por uno existente
+###
+GET http://localhost:3000/api/tags/1 HTTP/1.1
+
+
+
+// 🔵 4. Actualizar Tag (PATCH)
+// Cambia el ID por uno existente
+// Requiere autenticación del dueño
+###
+PATCH http://localhost:3000/api/tags/1 HTTP/1.1
+content-type: application/json
+x-auth: 1
+
+{
+    "name": "Comedia",
+    "color": "#00ff00"
+}
+
+
+
+// 🔵 5. Eliminar Tag (DELETE)
+// Cambia el ID por uno existente
+// Requiere autenticación del dueño
+###
+DELETE http://localhost:3000/api/tags/1 HTTP/1.1
+x-auth: 1
+

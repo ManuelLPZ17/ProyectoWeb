@@ -8,8 +8,8 @@ const routerApi = express.Router();
 
 // --- Importación de Routers Modulares ---
 const usersRouter = require('./users');
-// const reviewsRouter = require('./reviews'); // Faltan crear
-// const tagsRouter = require('./tags');       // Faltan crear
+const reviewsRouter = require('./reviews'); // Faltan crear
+const tagsRouter = require('./tags');       // Faltan crear
 
 // --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
 
@@ -52,7 +52,7 @@ routerApi.get('/tasks.html', (req, res) => {
 
 // --- ENRUTAMIENTO API MODULAR ---
 routerApi.use('/users', usersRouter);
-// routerApi.use('/reviews', reviewsRouter); 
-// routerApi.use('/tags', tagsRouter);
+routerApi.use('/reviews', reviewsRouter); 
+routerApi.use('/tags', tagsRouter);
 
 module.exports = routerApi;
