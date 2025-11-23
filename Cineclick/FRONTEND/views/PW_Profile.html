@@ -27,7 +27,8 @@
                 font-family: Arial, sans-serif;
                 min-height: 100vh;
                 display: flex;
-                background-color: white;
+                background: linear-gradient(145deg, var(--blue), var(--orange));
+
             }
 
             .sidebar {
@@ -325,16 +326,18 @@
             </div>
             </div>
             <!-- Aquí está la imagen del perfil, el nombre y el boton para editar -->
-            <div style="display: flex; align-items: center; gap: 15px; margin-top: 20px; margin-left: 40px;">
-                <img src="../assets/Yeezus.jpeg" alt="profilePicture" class="rounded-circle" style="height: 200px; width: 200px; object-fit: cover;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <h1 id="userName" style="margin: 0;">NAME</h1>
-                    <button class="btn bg-dark border-dark text-white" title="Editar" type="button" data-bs-toggle="modal" data-bs-target="#editUserModal">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                </div>
-            </div>
+            
+<div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 20px;">
+    <img src="../assets/Yeezus.jpeg" alt="profilePicture" class="rounded-circle" style="height: 150px; width: 150px; object-fit: cover;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+        <h1 id="userName" style="margin: 0;">NAME</h1>
+        <button class="btn bg-dark border-dark text-white" title="Editar" type="button" data-bs-toggle="modal" data-bs-target="#editUserModal">
+            <i class="fas fa-pen"></i>
+        </button>
+    </div>
+</div>
 
+            
             <!-- Tabla de contenido de este usuario -->
             <div class="mt-5 ms-3 d-flex justify-content-center" style="margin-right: 20px; flex-grow: 1; padding-right: 20px;">
                 <div class="text-center" style="border: 3px solid var(--dark); border-radius: 10px; padding: 20px; width: 90%; max-width: 1200px;">
