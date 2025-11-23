@@ -89,7 +89,6 @@ exports.getUserById = async (req, res) => {
     }
 };
 
-// 4. ACTUALIZAR USUARIO (PATCH /users/:id) - Requiere auth de usuario
 exports.updateUser = async (req, res) => {
     // La autenticación ya se manejó en el middleware.
     const id = parseInt(req.params.id);
@@ -102,43 +101,64 @@ exports.updateUser = async (req, res) => {
             return res.status(400).send("Must provide at least one field to update (name, email, or password).");
         }
         
-        // 2. Obtener el usuario actual para aplicar los cambios
-        let user = await UserService.getUserById(id);
-        if (!user) {
-            return res.status(404).send("User not found.");
-        }
+        // 2. Obtener el usuario actual (Retorna un objeto Mongoose o null)
+        // Usamos la función del servicio que trae la contraseña (SELECT +PASSWORD)
+        let userMongooseDoc = await UserService.getUserById(id);
         
-        // 3. Aplicar los cambios y usar el modelo para validar (sin modificar ID o joined_at)
+        if (!userMongooseDoc) {
+            return res.status(404).send("User not found."); 
+        }
+
+        // --- PREPARACIÓN DEL OBJETO DE ACTUALIZACIÓN ---
+        
+        const updateFields = {};
+        
+        // 3. Aplicar los cambios al objeto de Mongoose
+        // Iteramos sobre las claves enviadas en el body
         updateKeys.forEach(key => {
-            if (['name', 'email', 'password'].includes(key)) {
-                // Si la clave existe y no es joined_at o id, usa el setter del modelo para validar
-                user[key] = updateInfo[key];
+            if (['name', 'email', 'password'].includes(key) && updateInfo[key] !== undefined) {
+                // Aquí usamos el setter del Modelo JS para validar la calidad de los datos
+                // (Mínimo 8 chars, no vacío, etc.) antes de que Mongoose actúe.
+                // Nota: Esto asume que el objeto Mongoose tiene los setters del modelo JS. 
+                // Si no los tiene, el modelo JS debe ser usado SOLAMENTE para validación.
+
+                // Opcional: Validar con la lógica del modelo JS
+                // new User()[key] = updateInfo[key]; 
+                
+                // Si la validación (hecha implícitamente por el modelo Mongoose o aquí) pasa,
+                // añadimos el campo a la actualización
+                updateFields[key] = updateInfo[key];
             }
         });
         
-        // 4. Persistir los cambios en la DB
-        await UserService.updateUser(id, user);
+        // 4. Persistir los cambios en la DB con el servicio, enviando SOLO los campos de actualización
+        // Usamos updateFields para que Mongoose use $set y solo actualice lo necesario.
+        const updatedUser = await UserService.updateUser(id, updateFields);
 
         res.json({
             message: "User updated!",
-            user: user
+            user: updatedUser
         });
 
     } catch (err) {
-        // Captura excepciones de validación (ej. email duplicado, contraseña corta)
+        // Captura errores de Mongoose (Ej: E11000 duplicate key error, que ocurre si el email ya existe)
+        if (err.code && err.code === 11000) {
+             return res.status(400).send("Update failed: Email is already in use by another user.");
+        }
         res.status(400).send(err.errorMessage || "Update failed due to invalid data.");
     }
 };
 
 // 5. ELIMINAR USUARIO (DELETE /users/:id) - Requiere auth de usuario
 exports.deleteUser = async (req, res) => {
-    // La autenticación ya se manejó en el middleware.
     const id = parseInt(req.params.id);
 
     try {
         // 1. Validar integridad: ¿Tiene tareas (reseñas) asignadas?
+        // Asume que UserService.userHasReviews está implementado
         const hasReviews = await UserService.userHasReviews(id);
         if (hasReviews) {
+            // Lanza la excepción requerida por la Práctica 2/3
             return res.status(400).send("Cannot delete user. User has assigned reviews.");
         }
 

@@ -1,112 +1,78 @@
 // BACKEND/services/users_service.js
 
-// NOTA: En la práctica final, aquí importarías el esquema de Mongoose,
-// pero por ahora, solo simularemos la estructura.
+const UserMongooseModel = require('../schemas/user_schema'); 
+const { User } = require('../models/user'); // Se usa para la validación JS inicial
+const ReviewService = require('./reviews_service'); // Para validar integridad (Requisito delete)
 
-const { User } = require('../models/user'); // Se importa la clase User del modelo
-// const ReviewService = require('./tasks_service'); // Se necesitará para la validación de integridad
 
-// --- SIMULACIÓN DE LA BASE DE DATOS (Para que los controladores puedan iniciar) ---
-
-// Arreglo temporal para simular el almacenamiento de datos antes de usar Mongoose
-let users = []; 
-let currentId = 1;
-
-// Función que simula la lectura de la base de datos (retorna el array)
-const readDB = () => {
-    // En la Práctica 3 original, esto leería el archivo users.json.
-    // Aquí, simplemente devolvemos la simulación.
-    return users;
+// 1. GUARDAR un nuevo usuario (POST /users)
+exports.saveUser = async (userJSObject) => {
+    // 1. Crea el objeto Mongoose a partir del modelo JS
+    const newUser = new UserMongooseModel(userJSObject.toObj());
+    
+    // 2. Ejecuta la validación de Mongoose y guarda en la DB
+    return newUser.save(); 
 };
 
-// --- FUNCIONES CRUD DEL SERVICIO ---
-
-/**
- * Simula el guardado de un nuevo usuario en la base de datos.
- * En Mongoose: const newUser = new UserMongooseModel(userObject); return newUser.save();
- * @param {User} userObject - Objeto User validado por el modelo.
- * @returns {Object} El objeto guardado.
- */
-exports.saveUser = async (userObject) => {
-    // Simulación: Asignar ID si es necesario y guardar en el array
-    // userObject.id = currentId++; // Ya lo maneja getNextUserID en el modelo
-    users.push(userObject.toObj());
-    return userObject.toObj();
-};
-
-/**
- * Busca un usuario por su ID.
- * En Mongoose: return UserMongooseModel.findById(id).exec();
- * @param {number} id - ID del usuario.
- * @returns {Object|null} Objeto usuario o null.
- */
-exports.getUserById = async (id) => {
-    return users.find(user => user.id === parseInt(id)) || null;
-};
-
-/**
- * Busca un usuario por su correo electrónico (usado para validar duplicados).
- * En Mongoose: return UserMongooseModel.findOne({ email: email }).exec();
- * @param {string} email - Correo a buscar.
- * @returns {Object|null} Objeto usuario o null.
- */
+// 2. BUSCAR por Email (Para validar duplicados)
 exports.findByEmail = async (email) => {
-    return users.find(user => user.email === email) || null;
+    return UserMongooseModel.findOne({ email: email }).exec();
 };
 
-/**
- * Obtiene todos los usuarios. Usado para paginación (GET /users).
- */
-exports.getAllUsers = async () => {
-    return users;
-};
-
-/**
- * Actualiza la información de un usuario existente.
- * En Mongoose: return UserMongooseModel.findByIdAndUpdate(id, userObject, {...}).exec();
- */
-exports.updateUser = async (id, userObject) => {
-    const index = users.findIndex(u => u.id === parseInt(id));
-    if (index !== -1) {
-        users[index] = userObject.toObj();
-        return users[index];
-    }
-    return null;
-};
-
-/**
- * Elimina un usuario por su ID.
- * En Mongoose: return UserMongooseModel.findByIdAndDelete(id).exec();
- */
-exports.deleteUser = async (id) => {
-    const index = users.findIndex(u => u.id === parseInt(id));
-    if (index !== -1) {
-        const deletedUser = users[index];
-        users.splice(index, 1);
-        return deletedUser;
-    }
-    return null;
-};
-
-/**
- * Valida si el usuario tiene reseñas asignadas (Requisito de integridad para la eliminación).
- * NOTA: Esto debe usar el servicio de Reseñas (TaskService).
- */
-exports.userHasReviews = async (userId) => {
-    // const reviews = await ReviewService.getAllReviews();
-    // return reviews.some(review => review.owner === parseInt(userId));
-    return false; // Simulación: siempre devuelve false por ahora
-};
-
-// En BACKEND/services/users_service.js (Añadir esta función)
-
-/**
- * Busca un usuario por su contraseña (usado para autenticación general).
- * @param {string} password - Contraseña a buscar.
- * @returns {Object|null} Objeto usuario o null.
- */
+// 3. OBTENER por ID (GET /users/:id)
 exports.findUserByPassword = async (password) => {
-    // Implementación usando tu array simulado (o Mongoose en la versión final)
-    const users = this.getAllUsers(); // Asumiendo que esta función existe en el servicio
-    return users.find(user => user.password === password) || null;
+    // Usamos select('+password') para forzar a Mongoose a devolver el campo 'password'
+    // que fue ocultado en el esquema. 
+    return UserMongooseModel.findOne({ password: password })
+                           .select('+password') 
+                           .exec(); 
+};
+
+// --- FUNCIÓN CRÍTICA PARA CONSULTA INDIVIDUAL ---
+exports.getUserById = async (id) => {
+    // Usamos select('+password') aquí también para que el controlador tenga acceso a ella
+    // para las comparaciones.
+    return UserMongooseModel.findOne({ id: parseInt(id) }).select('+password').exec(); 
+};
+
+// --- FUNCIONES CRUD RESTANTES ---
+
+// 5. OBTENER TODOS los Usuarios (Usado para paginación GET /users)
+exports.getAllUsers = async () => {
+    // Mongoose.find() sin filtros trae todos.
+    return UserMongooseModel.find({}).exec(); 
+};
+
+// 6. ACTUALIZAR Usuario (PATCH /users/:id)
+exports.updateUser = async (id, updateFields) => { // Recibe SOLO los campos a modificar
+    // El método findOneAndUpdate busca por el campo 'id' (el consecutivo JS)
+    return UserMongooseModel.findOneAndUpdate(
+        { id: parseInt(id) }, 
+        { $set: updateFields }, // <--- CLAVE: USAMOS $SET y solo los campos modificados
+        { 
+            new: true,           // Devuelve el objeto actualizado
+            runValidators: true, // Ejecuta las validaciones del esquema (Ej. minlength, unique)
+        }
+    ).exec();
+};
+
+// 7. ELIMINAR Usuario (DELETE /users/:id)
+exports.deleteUser = async (id) => {
+    // Busca y elimina el documento por el campo 'id' numérico
+    return UserMongooseModel.findOneAndDelete({ id: parseInt(id) }).exec();
+};
+
+
+exports.userHasReviews = async (userId) => {
+    try {
+        // La llamada a findReviewsByOwner está correcta
+        const reviews = await ReviewService.findReviewsByOwner(parseInt(userId));
+        
+        // Verificamos si el resultado es un array con elementos
+        return Array.isArray(reviews) && reviews.length > 0;
+    } catch (e) {
+        // Capturamos el error de forma segura
+        console.error("Error al verificar integridad de reseñas:", e.message);
+        return false; 
+    }
 };
