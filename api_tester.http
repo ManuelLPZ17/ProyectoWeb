@@ -1,0 +1,39 @@
+// Post Users
+###
+POST http://localhost:3000/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "nombre": "crear",
+    "correo": "manuel@gmail.com",
+    "pass": "pass12345",
+    "edad": 20,
+    "sexo": "H"
+}
+
+// Get de usuarios
+###
+GET http://localhost:3000/api/users?nombre=
+
+// Put Users
+//Cambia el ID por uno existente
+###
+PUT http://localhost:3000/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "id": "68f91e0a87c8026ce521920c",
+    "nombre": "SUPER UPDATED"
+}
+
+// Delete de Users
+###
+// Cambia el ID por uno existente
+DELETE http://localhost:3000/api/users HTTP/1.1
+content-type: application/json
+
+{
+    "id": "680d25efcf9f68952aaae4bc"
+}
+
+//
