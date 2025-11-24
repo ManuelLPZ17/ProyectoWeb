@@ -8,7 +8,7 @@ Content-Type: application/json
 
 {
     "name": "Aficionado Deportes",
-    "email": "fan_deportes@miapp.com",
+    "email": "fan_watchlist@miapp.com",
     "password": "SuperPassDeportes#1",
     "confirm_password": "SuperPassDeportes#1"
 }
@@ -16,80 +16,52 @@ Content-Type: application/json
 
 
 # =========================================================================
-# 2. TAGS (DEPORTES)
+# 2. WATCHLIST (AGREGAR, OBTENER, ELIMINAR)
 # =========================================================================
 
-### Crear Tag: Fútbol
-POST http://127.0.0.1:3000/tags
+### Agregar Película 101 a Watchlist
+POST http://127.0.0.1:3000/watchlist
 x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "Fútbol"
+    "id_movie": 101
 }
 
-### Crear Tag: Basketball
-POST http://127.0.0.1:3000/tags
+### Agregar Película 202 a Watchlist
+POST http://127.0.0.1:3000/watchlist
 x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "Basketball"
+    "id_movie": 202
 }
 
-### Obtener Tag 1 (ajusta ID según corresponda)
-GET http://127.0.0.1:3000/tags/5
-x-auth: SuperPassDeportes#1
-
-### Actualizar Tag 1
-PATCH http://127.0.0.1:3000/tags/6
+### Intentar agregar duplicado (DEBE FALLAR)
+POST http://127.0.0.1:3000/watchlist
 x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "Fútbol Internacional"
+    "id_movie": 101
 }
+
+### Obtener Watchlist completa del usuario
+GET http://127.0.0.1:3000/watchlist
+x-auth: SuperPassDeportes#1
 
 
 
 # =========================================================================
-# 3. REVIEWS (DEPORTES) + INTEGRIDAD CON TAGS
+# 3. ELIMINAR ITEMS DE WATCHLIST
 # =========================================================================
 
-### Crear Review: Opinión deportiva usando Tag 1
-POST http://127.0.0.1:3000/reviews
-x-auth: SuperPassDeportes#1
-Content-Type: application/json
-
-{
-    "title": "Opinión sobre la Champions League 2025",
-    "description": "Análisis de equipos, rendimiento y predicciones.",
-    "due_date": "2025-11-15",
-    "owner": 1, 
-    "tags": [1],  
-    "rating": 9
-}
-
-### Intentar eliminar Tag 1 (DEBE FALLAR)
-DELETE http://127.0.0.1:3000/tags/1
+### Eliminar item 1 (ajusta el ID según lo que devuelva tu backend)
+DELETE http://127.0.0.1:3000/watchlist/1
 x-auth: SuperPassDeportes#1
 
-### Actualizar Review 1 (ajusta ID después)
-PATCH http://127.0.0.1:3000/reviews/6
-x-auth: SuperPassDeportes#1
-Content-Type: application/json
-
-{
-    "description": "Opinión actualizada después de los octavos.",
-    "rating": 7
-}
-
-### Eliminar Review 1
-DELETE http://127.0.0.1:3000/reviews/6
-x-auth: SuperPassDeportes#1
-
-### Ahora sí: Eliminar Tag 1
-DELETE http://127.0.0.1:3000/tags/6
+### Intentar eliminar un item que ya no existe
+DELETE http://127.0.0.1:3000/watchlist/1
 x-auth: SuperPassDeportes#1
 
 
@@ -98,6 +70,6 @@ x-auth: SuperPassDeportes#1
 # 4. ELIMINAR USUARIO BASE (DEPORTES)
 # =========================================================================
 
-### Eliminar Usuario
-DELETE http://127.0.0.1:3000/users/6
+### Eliminar Usuario (debe estar vacía la watchlist antes)
+DELETE http://127.0.0.1:3000/users/1
 x-auth: SuperPassDeportes#1

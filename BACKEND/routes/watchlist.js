@@ -6,19 +6,39 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const routerWatchlist = express.Router();
 
-// POST /watchlist: Agregar una película (Requiere autenticación)
-routerWatchlist.post('/', authMiddleware.authRequiredMiddleware, watchlistController.addItemToWatchlist);
+// POST /watchlist: Agregar película
+routerWatchlist.post(
+    '/', 
+    authMiddleware.authRequiredMiddleware, 
+    watchlistController.addItemToWatchlist
+);
 
-// GET /watchlist: Obtener la lista del usuario (Requiere autenticación)
-routerWatchlist.get('/', authMiddleware.authRequiredMiddleware, watchlistController.getWatchlist);
+// GET /watchlist: Obtener lista del usuario
+routerWatchlist.get(
+    '/', 
+    authMiddleware.authRequiredMiddleware, 
+    watchlistController.getWatchlist
+);
 
-// DELETE /watchlist/:id (Requiere autenticación del propietario)
-routerWatchlist.delete('/:id', authMiddleware.authOwnerMiddleware, watchlistController.deleteWatchlistItem);
+// GET /watchlist/:id — Obtener item específico (protegido)
+routerWatchlist.get(
+    '/:id',
+    authMiddleware.authRequiredMiddleware,
+    watchlistController.getWatchlistItemById
+);
 
-// PATCH /watchlist/:id (Requiere autenticación del propietario)
-routerWatchlist.patch('/:id', authMiddleware.authOwnerMiddleware, watchlistController.updateWatchlistItem);
+// DELETE /watchlist/:id — Borra solo si pertenece al usuario
+routerWatchlist.delete(
+    '/:id',
+    authMiddleware.authRequiredMiddleware,
+    watchlistController.deleteWatchlistItem
+);
 
-// GET /watchlist/:id
-routerWatchlist.get('/:id', watchlistController.getWatchlistItemById);
+// PATCH /watchlist/:id — No implementado, pero protegido
+routerWatchlist.patch(
+    '/:id',
+    authMiddleware.authRequiredMiddleware,
+    watchlistController.updateWatchlistItem
+);
 
 module.exports = routerWatchlist;

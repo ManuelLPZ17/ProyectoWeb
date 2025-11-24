@@ -1,23 +1,55 @@
 // BACKEND/services/watchlist_service.js
 
-// SIMULACIÓN DE DATOS
-let watchlist = []; 
+const WatchlistItem = require("../schemas/watchlist_schema");
 
-exports.saveWatchlistItem = async (itemObject) => {
-    // Aquí iría la validación de duplicado (mismo usuario/misma película)
-    watchlist.push(itemObject.toObj());
-    return itemObject.toObj();
+let nextWatchlistId = 1;
+let watchlist = []; // simulación de BD
+
+exports.createItem = async (data) => {
+    // Validar duplicado: mismo usuario, misma película
+    const exists = watchlist.find(i =>
+        i.id_user === data.id_user && i.movie_id === data.movie_id
+    );
+
+    if (exists) {
+        throw new Error("Movie already exists in user's watchlist.");
+    }
+
+    const item = new WatchlistItem(data);
+
+    item.id = nextWatchlistId++;
+    watchlist.push(item.toObj());
+
+    return item.toObj();
 };
 
-exports.getWatchlistItemById = async (id) => {
-    return watchlist.find(w => w.id === parseInt(id)) || null;
+exports.getUserWatchlist = async (userId) => {
+    return watchlist.filter(i => i.id_user === parseInt(userId));
 };
 
-exports.getAllWatchlistItems = async () => {
-    return watchlist;
+exports.getItem = async (id) => {
+    return watchlist.find(i => i.id === parseInt(id)) || null;
 };
 
-// Necesario para la validación de integridad: verificar si un usuario tiene elementos
-exports.findItemsByUserId = async (userId) => {
-    return watchlist.filter(w => w.id_user === parseInt(userId));
+exports.deleteItem = async (id) => {
+    const index = watchlist.findIndex(i => i.id === parseInt(id));
+    if (index === -1) return false;
+
+    watchlist.splice(index, 1);
+    return true;
+};
+
+exports.updateItem = async (id, data) => {
+    const item = watchlist.find(i => i.id === parseInt(id));
+    if (!item) return null;
+
+    if (data.status) item.status = data.status;
+
+    return item;
+};
+
+// Útil para authOwnerMiddleware
+exports.getUserIdFromItem = (id) => {
+    const item = watchlist.find(i => i.id === parseInt(id));
+    return item ? item.id_user : null;
 };
