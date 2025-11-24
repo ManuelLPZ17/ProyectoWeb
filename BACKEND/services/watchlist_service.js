@@ -1,55 +1,40 @@
-// BACKEND/services/watchlist_service.js
-
-const WatchlistItem = require("../schemas/watchlist_schema");
-
-let nextWatchlistId = 1;
-let watchlist = []; // simulación de BD
+const Watchlist = require("../models/watchlist");
 
 exports.createItem = async (data) => {
-    // Validar duplicado: mismo usuario, misma película
-    const exists = watchlist.find(i =>
-        i.id_user === data.id_user && i.movie_id === data.movie_id
-    );
+    // Validar duplicado
+    const exists = await Watchlist.findOne({
+        id_user: data.id_user,
+        movie_id: data.movie_id
+    });
 
     if (exists) {
         throw new Error("Movie already exists in user's watchlist.");
     }
 
-    const item = new WatchlistItem(data);
-
-    item.id = nextWatchlistId++;
-    watchlist.push(item.toObj());
-
-    return item.toObj();
-};
-
-exports.getUserWatchlist = async (userId) => {
-    return watchlist.filter(i => i.id_user === parseInt(userId));
-};
-
-exports.getItem = async (id) => {
-    return watchlist.find(i => i.id === parseInt(id)) || null;
-};
-
-exports.deleteItem = async (id) => {
-    const index = watchlist.findIndex(i => i.id === parseInt(id));
-    if (index === -1) return false;
-
-    watchlist.splice(index, 1);
-    return true;
-};
-
-exports.updateItem = async (id, data) => {
-    const item = watchlist.find(i => i.id === parseInt(id));
-    if (!item) return null;
-
-    if (data.status) item.status = data.status;
-
+    const item = new Watchlist(data);
+    await item.save();
     return item;
 };
 
-// Útil para authOwnerMiddleware
-exports.getUserIdFromItem = (id) => {
-    const item = watchlist.find(i => i.id === parseInt(id));
+exports.getUserWatchlist = async (userId) => {
+    return await Watchlist.find({ id_user: userId });
+};
+
+exports.getItem = async (id) => {
+    return await Watchlist.findById(id);
+};
+
+exports.deleteItem = async (id) => {
+    const result = await Watchlist.findByIdAndDelete(id);
+    return result !== null;
+};
+
+exports.updateItem = async (id, data) => {
+    const item = await Watchlist.findByIdAndUpdate(id, data, { new: true });
+    return item;
+};
+
+exports.getUserIdFromItem = async (id) => {
+    const item = await Watchlist.findById(id);
     return item ? item.id_user : null;
 };

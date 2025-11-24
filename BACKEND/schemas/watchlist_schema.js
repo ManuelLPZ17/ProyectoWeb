@@ -1,27 +1,28 @@
-// BACKEND/schemas/watchlist_schema.js
+const mongoose = require("mongoose");
 
-class WatchlistItem {
-    constructor({ id_user, movie_id, movie_title, movie_poster, status }) {
-        this.id = null; // lo asigna el servicio
-        this.id_user = id_user;
-        this.movie_id = movie_id;           // ID de la película (de tu API externa)
-        this.movie_title = movie_title;     // Nombre visible
-        this.movie_poster = movie_poster;   // Imagen de portada
-        this.status = status || "pending";  // pending | watching | finished
-        this.added_at = new Date();         // marca de fecha
+const WatchlistSchema = new mongoose.Schema({
+    id_user: {
+        type: Number,
+        required: true
+    },
+    movie_id: {
+        type: Number,
+        required: true
+    },
+    movie_title: {
+        type: String,
+        required: false
+    },
+    movie_poster: {
+        type: String,
+        required: false
+    },
+    status: {
+        type: String,
+        enum: ["pending", "watching", "completed"],
+        default: "pending"
     }
+}, { versionKey: false });
 
-    toObj() {
-        return {
-            id: this.id,
-            id_user: this.id_user,
-            movie_id: this.movie_id,
-            movie_title: this.movie_title,
-            movie_poster: this.movie_poster,
-            status: this.status,
-            added_at: this.added_at
-        };
-    }
-}
-
-module.exports = WatchlistItem;
+// Exportar modelo
+module.exports = mongoose.model("WatchlistItem", WatchlistSchema);

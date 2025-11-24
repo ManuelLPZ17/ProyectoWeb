@@ -1,106 +1,179 @@
 # =========================================================================
-# 1. CREAR USUARIO BASE (DEPORTES)
+# CONFIGURACIÓN GLOBAL
 # =========================================================================
 
-### Crear Usuario Deportivo
-POST http://127.0.0.1:3000/users
+@url = http://127.0.0.1:3000
+@admin_auth = admin_auth_key_secreta
+@user1_pass = Pw12345678#
+@user2_pass = Pw23456789#
+@user1_id = 1 
+@user2_id = 2 
+@tag_id = 1
+@review_id = 1
+@comment_id = 1
+@watchlist_id = 1
+@movie_id = 105
+
+
+# =========================================================================
+# 1. MÓDULO USERS: CREACIÓN (CRUD Base)
+# =========================================================================
+
+### 1.1: REGISTRAR Usuario 1 (ID 1) - Crea la base de la autenticación
+# Esperado: 201 Created.
+POST {{url}}/users
 Content-Type: application/json
 
 {
-    "name": "Aficionado Deportes",
-    "email": "fan_watchlist@miapp.com",
-    "password": "SuperPassDeportes#1",
-    "confirm_password": "SuperPassDeportes#1"
+    "name": "Usuario Base",
+    "email": "base@cineclick.com",
+    "password": "{{user1_pass}}",
+    "confirm_password": "{{user1_pass}}"
 }
 
-
-
-# =========================================================================
-# 2. WATCHLIST (AGREGAR, OBTENER, ELIMINAR)
-# =========================================================================
-
-### Agregar Película 101 a Watchlist
-POST http://127.0.0.1:3000/watchlist
-x-auth: SuperPassDeportes#1
+### 1.2: REGISTRAR Usuario 2 (ID 2) - Para pruebas de propiedad
+# Esperado: 201 Created.
+POST {{url}}/users
 Content-Type: application/json
 
 {
-    "id_movie": 101
+    "name": "Usuario Secundario",
+    "email": "secundario@cineclick.com",
+    "password": "{{user2_pass}}",
+    "confirm_password": "{{user2_pass}}"
 }
-
-### Agregar Película 202 a Watchlist
-POST http://127.0.0.1:3000/watchlist
-x-auth: SuperPassDeportes#1
-Content-Type: application/json
-    
-{
-    "id_movie": 202
-}
-
-### Intentar agregar duplicado (DEBE FALLAR)
-POST http://127.0.0.1:3000/watchlist
-x-auth: SuperPassDeportes#1
-Content-Type: application/json
-
-{
-    "id_movie": 101
-}
-
-### Obtener Watchlist completa del usuario
-GET http://127.0.0.1:3000/watchlist
-x-auth: SuperPassDeportes#1
-
 
 
 # =========================================================================
-# 3. ELIMINAR ITEMS DE WATCHLIST
+# 2. MÓDULO TAGS (ETIQUETAS/GÉNEROS): CREACIÓN Y CONSULTA
 # =========================================================================
 
-### Eliminar item 1 (ajusta el ID según lo que devuelva tu backend)
-DELETE http://127.0.0.1:3000/watchlist/1
-x-auth: SuperPassDeportes#1
-
-### Intentar eliminar un item que ya no existe
-DELETE http://127.0.0.1:3000/watchlist/1
-x-auth: SuperPassDeportes#1
-
-
-
-# =========================================================================
-# 4. ELIMINAR USUARIO BASE (DEPORTES)
-# =========================================================================
-
-### Eliminar Usuario (debe estar vacía la watchlist antes)
-DELETE http://127.0.0.1:3000/users/1
-x-auth: SuperPassDeportes#1
-
-
-
-###
-POST http://localhost:3000/api/comments
+### 2.1: CREAR TAG (POST /tags) - ID 1
+# Esperado: 201 Created.
+POST {{url}}/tags
+x-auth: {{user1_pass}}
 Content-Type: application/json
-x-auth: SuperPassDeportes#1
 
 {
-    "id": 1,
-    "id_review": 1,
-    "owner": 1,
-    "content": "Excelente reseña, bien explicada!",
-    "date": "2025-11-23"
+    "name": "Ciencia Ficción"
 }
 
-### get
-GET http://localhost:3000/api/comments?reviewId=1
+### 2.2: CONSULTA INDIVIDUAL TAG (GET /tags/1)
+# Esperado: 200 OK.
+GET {{url}}/tags/{{tag_id}}
+x-auth: {{user1_pass}}
 
-### uptade
-PATCH http://localhost:3000/api/comments/2
+
+# =========================================================================
+# 3. MÓDULO REVIEWS (RESEÑAS): CREACIÓN DE DEPENDENCIA
+# =========================================================================
+
+### 3.1: CREAR RESEÑA (POST /reviews) - ID 1
+# NOTA: Crea la dependencia entre Tag 1 y Usuario 1.
+# Esperado: 201 Created.
+POST {{url}}/reviews
+x-auth: {{user1_pass}}
 Content-Type: application/json
-x-auth: SuperPassDeportes#1
 
 {
-    "content": "Actualizando el comentario!"
+    "title": "Reseña de Prueba",
+    "description": "El contenido principal de la reseña.",
+    "due_date": "2025-11-23",
+    "owner": {{user1_id}},
+    "tags": [{{tag_id}}],
+    "rating": 8
 }
 
-###delete
-DELETE http://localhost:3000/api/comments/2
-x-auth: SuperPassDeportes#1
+### 3.2: CONSULTA INDIVIDUAL RESEÑA (GET /reviews/1)
+# Esperado: 200 OK.
+GET {{url}}/reviews/{{review_id}}
+x-auth: {{user1_pass}}
+
+
+# =========================================================================
+# 4. MÓDULO COMMENTS: CREACIÓN DE DEPENDENCIA SECUNDARIA
+# =========================================================================
+
+### 4.1: CREAR COMENTARIO (POST /comments) - ID 1
+# NOTA: Crea una dependencia de integridad crítica con la Reseña 1.
+# Esperado: 201 Created.
+POST {{url}}/comments
+x-auth: {{user2_pass}}
+Content-Type: application/json
+
+{
+    "id_review": {{review_id}},
+    "content": "¡Comentario del usuario 2 en la reseña de usuario 1!"
+}
+
+### 4.2: CONSULTAR COMENTARIOS POR RESEÑA (GET /comments?reviewId=1)
+# Esperado: 200 OK. Regresa un array con el Comentario 1.
+GET {{url}}/comments?reviewId={{review_id}}
+x-auth: {{user1_pass}}
+
+
+# =========================================================================
+# 5. MÓDULO WATCHLIST: CREACIÓN
+# =========================================================================
+
+### 5.1: AGREGAR A WATCHLIST (POST /watchlist) - Item 1
+# Esperado: 201 Created.
+POST {{url}}/watchlist
+x-auth: {{user1_pass}}
+Content-Type: application/json
+
+{
+    "movie_id": {{movie_id}}
+}
+
+### 5.2: CONSULTAR WATCHLIST (GET /watchlist)
+# Esperado: 200 OK. Regresa el item 1.
+GET {{url}}/watchlist
+x-auth: {{user1_pass}}
+
+
+# =========================================================================
+# 6. PRUEBAS DE INTEGRIDAD Y ELIMINACIÓN (Orden Inverso)
+# =========================================================================
+
+### 6.1: PRUEBA DE INTEGRIDAD: ELIMINAR RESEÑA 1 (DEBE FALLAR)
+# Regla: La Reseña 1 está bloqueada por el Comentario 1.
+# Esperado: 400 Bad Request. Body: "Cannot delete review. Review has assigned comments."
+DELETE {{url}}/reviews/{{review_id}}
+x-auth: {{user1_pass}}
+
+### 6.2: ELIMINAR COMENTARIO 1 (DELETE /comments/1)
+# Rompe la dependencia de la Reseña.
+# Esperado: 200 OK.
+DELETE {{url}}/comments/{{comment_id}}
+x-auth: {{user2_pass}}
+
+### 6.3: ELIMINAR RESEÑA 1 (EXITOSO)
+# Rompe la dependencia del Tag.
+# Esperado: 200 OK.
+DELETE {{url}}/reviews/{{review_id}}
+x-auth: {{user1_pass}}
+
+### 6.4: PRUEBA DE INTEGRIDAD: ELIMINAR USUARIO 1 (DEBE FALLAR)
+# Regla: El Usuario 1 tiene items en la Watchlist (Item 1).
+# Esperado: 400 Bad Request. Body: "Cannot delete user. User has assigned reviews."
+DELETE {{url}}/users/{{user1_id}}
+x-auth: {{user1_pass}}
+
+### 6.5: ELIMINAR WATCHLIST ITEM 1 (DELETE /watchlist/1)
+# Rompe la dependencia del Usuario.
+# Esperado: 200 OK.
+DELETE {{url}}/watchlist/{{watchlist_id}}
+x-auth: {{user1_pass}}
+
+### 6.6: ELIMINAR TAG 1 (EXITOSO)
+# El Tag ya no tiene dependencias de Reseñas.
+# Esperado: 200 OK.
+DELETE {{url}}/tags/{{tag_id}}
+x-auth: {{user1_pass}}
+
+### 6.7: ELIMINAR USUARIO 1 (EXITOSO)
+# El usuario ya no tiene dependencias.
+# Esperado: 200 OK.
+DELETE {{url}}/users/{{user1_id}}
+x-auth: {{user1_pass}}

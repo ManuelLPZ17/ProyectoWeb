@@ -50,6 +50,7 @@ exports.authRequiredMiddleware = async (req, res, next) => {
     }
     
     req.userId = user.id; 
+    req.user = user;
     next();
 };
 
@@ -64,3 +65,4 @@ exports.authAdminMiddleware = (req, res, next) => {
     }
     next();
 };
+

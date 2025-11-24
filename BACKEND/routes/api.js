@@ -11,7 +11,7 @@ const usersRouter = require('./users');
 const reviewsRouter = require('./reviews'); // Faltan crear
 const tagsRouter = require('./tags');       // Faltan crear
 const commentsRouter = require('./comments');
-
+const watchlistRouter = require('./watchlist');
 // --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
 
 // Middleware que valida si el usuario está autenticado para acceder a archivos protegidos
@@ -56,4 +56,5 @@ routerApi.use('/users', usersRouter);
 routerApi.use('/reviews', reviewsRouter); 
 routerApi.use('/tags', tagsRouter);
 routerApi.use('/comments', commentsRouter);
+routerApi.use('/watchlist', watchlistRouter);
 module.exports = routerApi;

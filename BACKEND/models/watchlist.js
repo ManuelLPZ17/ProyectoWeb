@@ -1,38 +1,25 @@
-// BACKEND/routes/watchlist.js
+const mongoose = require("mongoose");
 
-const express = require("express");
-const watchlistController = require("../controllers/watchlist_api_controller");
-const authMiddleware = require("../middlewares/authMiddleware");
-const ownerMiddleware = require("../middlewares/authOwnerMiddleware");
+const WatchlistSchema = new mongoose.Schema({
+    id_user: {
+        type: Number,
+        required: true
+    },
+    movie_id: {
+        type: Number,
+        required: true
+    },
+    movie_title: String,
+    movie_poster: String,
+    status: {
+        type: String,
+        enum: ["pending", "watching", "finished"],
+        default: "pending"
+    },
+    added_at: {
+        type: Date,
+        default: Date.now
+    }
+});
 
-const routerWatchlist = express.Router();
-
-routerWatchlist.post(
-    "/",
-    authMiddleware.authRequiredMiddleware,
-    watchlistController.addItemToWatchlist
-);
-
-routerWatchlist.get(
-    "/",
-    authMiddleware.authRequiredMiddleware,
-    watchlistController.getWatchlist
-);
-
-routerWatchlist.get("/:id", watchlistController.getWatchlistItemById);
-
-routerWatchlist.delete(
-    "/:id",
-    authMiddleware.authRequiredMiddleware,
-    ownerMiddleware.authOwnerMiddleware,
-    watchlistController.deleteWatchlistItem
-);
-
-routerWatchlist.patch(
-    "/:id",
-    authMiddleware.authRequiredMiddleware,
-    ownerMiddleware.authOwnerMiddleware,
-    watchlistController.updateWatchlistItem
-);
-
-module.exports = routerWatchlist;
+module.exports = mongoose.model("Watchlist", WatchlistSchema);
