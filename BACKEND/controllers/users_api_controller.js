@@ -179,3 +179,40 @@ exports.deleteUser = async (req, res) => {
         res.status(500).send("Error deleting user.");
     }
 };
+
+exports.loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).send("Email and password are required.");
+        }
+
+        // 1. Buscar al usuario por email
+        const user = await UserService.findByEmail(email);
+
+        if (!user) {
+            return res.status(401).send("Invalid email or password.");
+        }
+
+        // 2. Usar la contraseña del cuerpo para verificar la identidad
+        // Nota: findByEmail NO devuelve la contraseña por defecto (select: false en schema)
+        // Por lo tanto, debes buscar el usuario por el password (o usar la función findUserByPassword).
+        const authenticatedUser = await UserService.findUserByPassword(password);
+
+        if (!authenticatedUser || authenticatedUser.email !== user.email) {
+            return res.status(401).send("Invalid email or password.");
+        }
+
+        // 3. Login exitoso. Devolvemos el ID y la clave de autenticación.
+        res.status(200).json({
+            message: "Login successful.",
+            user_id: user.id, // ID consecutivo
+            auth_key: user.password // La contraseña es la clave x-auth
+        });
+
+    } catch (err) {
+        console.error("Login Error:", err);
+        res.status(500).send("An internal server error occurred during login.");
+    }
+};

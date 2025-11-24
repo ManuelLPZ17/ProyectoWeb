@@ -8,55 +8,12 @@
     <style>
         body {
             background: #E5F4E3;
-
         }
         .Inicio {
             color: black;
         }
-
-        
+        /* Nota: Añade los estilos para que los botones se vean bien, como los que definiste antes */
     </style>
-    <script>
-
-        function toggleForms() {
-            let form_login = document.getElementById('formLogin'),
-                form_register = document.getElementById('formRegister'),
-                title = document.querySelector('.card-title');
-
-            if (form_register.style.display === 'none') {
-                form_login.style.display = 'none';
-                form_register.style.display = 'block';
-                title.textContent = 'Registro';
-            } else {
-                form_login.style.display = 'block';
-                form_register.style.display = 'none';
-                title.textContent = 'Inicio de Sesión';
-            }
-        }
-        function validateLogin(event) {
-            const form = event.target;
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-                form.classList.add('was-validated');
-            }
-        }
-        function validateRegister(event) {
-            const form = event.target;
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
-                form.classList.add('was-validated');
-            } else {
-                event.preventDefault();
-                alert('Registro exitoso!');
-                form.reset();
-                form.classList.remove('was-validated');
-                toggleForms();
-            }
-        }
-
-    </script>
 </head>
 <body class="text-white">
 
@@ -65,7 +22,8 @@
         <div class="card-body">
 
             <h3 class="card-title text-center mb-4 Inicio">Inicio de Sesión</h3>
-            <form id="formLogin" action="./PW_Home.html" method="GET" onsubmit="validateLogin(event)" novalidate>
+            
+            <form id="formLogin" novalidate>
                 <div class="mb-3">
                     <label for="email" class="form-label text-black"><strong>Email</strong></label>
                     <input type="email" class="form-control text-black" id="email" name="correo" placeholder="test@email.com" required>
@@ -80,7 +38,7 @@
                 </div>
             </form>
 
-            <form id="formRegister" style="display: none;" onsubmit="validateRegister(event)" novalidate>
+            <form id="formRegister" style="display: none;" novalidate>
                 <div class="mb-3">
                     <label class="form-label text-black"><strong>Name</strong></label>
                     <input type="text" class="form-control text-black" id="newName" name="newName" required>
@@ -105,6 +63,9 @@
         </div>
     </div>
 </div>
+
+<script src="/Cineclick/FRONTEND/scripts/login.js"></script>
+
 
 </body>
 </html>

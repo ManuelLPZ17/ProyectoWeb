@@ -1,5 +1,3 @@
-// BACKEND/routes/api.js
-
 const express = require('express');
 const path = require('path');
 const authMiddleware = require('../middlewares/authMiddleware');
@@ -12,49 +10,51 @@ const reviewsRouter = require('./reviews'); // Faltan crear
 const tagsRouter = require('./tags');       // Faltan crear
 const commentsRouter = require('./comments');
 const watchlistRouter = require('./watchlist');
-// --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
+const authRouter = require('./auth');
 
-// Middleware que valida si el usuario está autenticado para acceder a archivos protegidos
-routerApi.use(['/home.html', '/tasks.html'], authMiddleware.authRequiredMiddleware, (req, res, next) => {
-    next();
-});
+// --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
+// Solo protege los HTML que requieren login
+routerApi.use(
+  ['/home.html', '/tasks.html'], 
+  authMiddleware.authRequiredMiddleware, 
+  (req, res, next) => next()
+);
 
 // --- RUTAS QUE DEVUELVEN ARCHIVOS HTML ---
 
 // RUTA RAIZ /
-// Regla: Si tiene autenticación, regresa home.html. Si no, regresa login.html. [cite: 80-81]
 routerApi.get('/', (req, res) => {
-    const authHeader = req.headers['x-auth'];
-    const filePath = (authHeader) 
-        ? path.resolve(__dirname + "/../../Cineclick/FRONTEND/views/PW_Home.html")
-        : path.resolve(__dirname + "/../../Cineclick/FRONTEND/views/PW_Login.html");
-        
-    res.sendFile(filePath);
+  const authHeader = req.headers['x-auth'];
+  const filePath = authHeader
+    ? path.resolve(__dirname + '/../../Cineclick/FRONTEND/views/PW_Home.html')
+    : path.resolve(__dirname + '/../../Cineclick/FRONTEND/views/PW_Login.html');
+
+  res.sendFile(filePath);
 });
 
 // RUTA /login.html
-// Regla: Siempre regresa login.html. [cite: 83]
 routerApi.get('/login.html', (req, res) => {
-    res.sendFile(path.resolve(__dirname + "/../../FRONTEND/views/PW_Login.html"));
+  res.sendFile(path.resolve(__dirname + '/../../Cineclick/FRONTEND/views/PW_Login.html'));
 });
 
 // RUTA /home.html
-// Regla: Regresa home.html si pasa la autenticación (manejada por el middleware de arriba). [cite: 82]
 routerApi.get('/home.html', (req, res) => {
-    res.sendFile(path.resolve(__dirname + "/../../FRONTEND/views/PW_Home.html"));
+  res.sendFile(path.resolve(__dirname + '/../../Cineclick/FRONTEND/views/PW_Home.html'));
 });
 
-// RUTA /tasks.html
-// Regla: Regresa tasks.html si pasa la autenticación (manejada por el middleware de arriba). [cite: 84]
+// RUTA /tasks.html (placeholder de movies/reseñas)
 routerApi.get('/tasks.html', (req, res) => {
-    // Usaremos PW_Movie.html como placeholder para tasks.html/reseñas
-    res.sendFile(path.resolve(__dirname + "/../../FRONTEND/views/PW_Movie.html"));
+  res.sendFile(path.resolve(__dirname + '/../../Cineclick/FRONTEND/views/PW_Movie.html'));
 });
 
 // --- ENRUTAMIENTO API MODULAR ---
-routerApi.use('/users', usersRouter);
-routerApi.use('/reviews', reviewsRouter); 
-routerApi.use('/tags', tagsRouter);
-routerApi.use('/comments', commentsRouter);
-routerApi.use('/watchlist', watchlistRouter);
+// Asegúrate de que todas las rutas de API tengan prefijo coherente
+
+routerApi.use('/users', usersRouter);             // /users
+routerApi.use('/api/reviews', reviewsRouter);     // /api/reviews
+routerApi.use('/api/tags', tagsRouter);           // /api/tags
+routerApi.use('/api/comments', commentsRouter);   // /api/comments
+routerApi.use('/api/watchlist', watchlistRouter); // /api/watchlist
+routerApi.use('/api/auth', authRouter);           // /api/auth
+
 module.exports = routerApi;

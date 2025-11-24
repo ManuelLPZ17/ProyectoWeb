@@ -26,7 +26,7 @@ Content-Type: application/json
 
 {
     "name": "Usuario Base",
-    "email": "base@cineclick.com",
+    "email": "bassssse@cineclick.com",
     "password": "{{user1_pass}}",
     "confirm_password": "{{user1_pass}}"
 }

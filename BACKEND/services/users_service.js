@@ -16,7 +16,7 @@ exports.saveUser = async (userJSObject) => {
 
 // 2. BUSCAR por Email (Para validar duplicados)
 exports.findByEmail = async (email) => {
-    return UserMongooseModel.findOne({ email: email }).exec();
+    return UserMongooseModel.findOne({ email: email }).select('+password').exec();
 };
 
 // 3. OBTENER por ID (GET /users/:id)
