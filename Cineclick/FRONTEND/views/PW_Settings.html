@@ -221,7 +221,7 @@
                 </div>
 
                 <div class="modal-body text-center">
-                    <p class="fw-semibold text-duke mb-2">¿Estás seguro de que deseas cerrar sesión?
+                    <p class="fw-semibold text-duke mb-2">¿Estás seguro de que deseas cerrar sesión? </p>
                 </div>
 
                 <div class="modal-footer border-0 justify-content-center pb-4">
@@ -235,17 +235,50 @@
                 </div>
             </div>
             </div>
+     <!-- MODAL CONFIRMAR ELIMINAR CUENTA -->
+            <div class="modal fade" id="modalEliminarCuenta" tabindex="-1" aria-labelledby="modalEliminarCuentaLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                <div class="modal-header bg-blue text-white">
+                    <h5 class="modal-title fw-bold" id="modalEliminarCuentaLabel">
+                    <i class="fas fa-trash-alt me-2"></i> Confirmar Eliminar Cuenta
+
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body text-center">
+                    <p class="fw-semibold text-duke mb-2">¿Estás seguro de que deseas eliminar cuenta?</p>
+                </div>
+
+                <div class="modal-footer border-0 justify-content-center pb-4">
+                    <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">
+                    Cancelar
+                    </button>
+                    <button type="button" class="btn-orange px-4" id="confirmDeleteAccount">
+                    Eliminar 
+                    </button>
+                </div>
+                </div>
+            </div>
+            </div>
+
 
     <div class="content">
       <h1>Configuración de Cuenta</h1>
 
-      <!-- FOTO DE PERFIL -->
-      <div class="profile-photo">
-        <img src="../assets/Yeezus.jpeg" alt="Foto de perfil" id="fotoPerfil" />
-        <div>
-          <button class="btn btn-primary fw-bold" id="editarFoto">Cambiar foto</button>
-        </div>
-      </div>
+      <!-- FOTO DE PERFIL (reemplaza la sección anterior) -->
+<div class="profile-photo">
+  <img src="../assets/Yeezus.jpeg" alt="Foto de perfil" id="fotoPerfil" />
+  <div>
+    <!-- input oculto pero asociado a un label (label abre el selector de archivos) -->
+    <input type="file" id="inputFoto" accept="image/*" style="display:none" />
+    <label for="inputFoto" class="btn btn-primary fw-bold" id="editarFoto" role="button">
+      Cambiar foto
+    </label>
+  </div>
+</div>
+
 
       <!-- FORMULARIO UNIFICADO -->
       <form id="formConfiguracion">
@@ -269,7 +302,7 @@
       </form>
 
       <div class="mt-5">
-        <button class="btn btn-danger fw-bold me-2">
+        <button class="btn btn-danger fw-bold me-2" id="btnEliminarCuenta">
           <i class="fas fa-trash-alt me-2"></i> Eliminar Cuenta
         </button>
         <button class="btn btn-orange fw-bold" id="logoutBtn2">
@@ -336,6 +369,66 @@
       window.location.href = "PW_login.html";
     });
   });
+
+  
+</script>
+
+<script>
+
+  document.addEventListener("DOMContentLoaded", () => {
+  
+    /*** --- LISTENER ELIMINAR CUENTA --- ***/
+    const deleteBtn = document.getElementById("btnEliminarCuenta"); // botón rojo
+    const deleteModal = new bootstrap.Modal(document.getElementById("modalEliminarCuenta"));
+    const confirmDelete = document.getElementById("confirmDeleteAccount");
+
+    // Al abrir el modal de confirmación
+    deleteBtn.addEventListener("click", () => {
+        deleteModal.show();
+    });
+
+    // Acción al confirmar eliminación
+    confirmDelete.addEventListener("click", () => {
+        // Aquí podrías hacer fetch a tu backend para eliminar cuenta
+        // por ahora solo redirige:
+        alert("Cuenta eliminada correctamente.");
+        window.location.href = "PW_login.html";
+    });
+});
+
+
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const inputFoto = document.getElementById("inputFoto");
+  const fotoPerfil = document.getElementById("fotoPerfil");
+
+  // Cambiar foto cuando el usuario selecciona un archivo
+  inputFoto.addEventListener("change", () => {
+    const archivo = inputFoto.files[0];
+    if (!archivo) return;
+
+    // Validar que sea imagen
+    if (!archivo.type.startsWith("image/")) {
+      alert("Por favor selecciona una imagen válida.");
+      inputFoto.value = "";
+      return;
+    }
+
+    // Leer y mostrar la imagen seleccionada
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      fotoPerfil.src = e.target.result;
+    };
+    reader.readAsDataURL(archivo);
+  });
+
+  // Click en la foto abre el selector (extra)
+  fotoPerfil.addEventListener("click", () => {
+    inputFoto.click();
+  });
+});
 </script>
 
 </body>
