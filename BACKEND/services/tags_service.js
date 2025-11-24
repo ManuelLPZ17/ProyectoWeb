@@ -1,104 +1,68 @@
-// // BACKEND/services/tags_service.js
+// BACKEND/services/tags_service.js
 
-// // SIMULACIÓN DE DATOS
-// let tags = []; 
+const TagModel = require('../schemas/tag_schema');
 
-// exports.saveTag = async (tagObject) => {
-//     // Aquí iría la validación de nombre duplicado
-//     tags.push(tagObject.toObj());
-//     return tagObject.toObj();
-// };
-
-// exports.getTagById = async (id) => {
-//     return tags.find(t => t.id === parseInt(id)) || null;
-// };
-
-// exports.getAllTags = async () => {
-//     return tags;
-// };
-
-// exports.updateTag = async (id, tagObject) => {
-//     const index = tags.findIndex(t => t.id === parseInt(id));
-//     if (index !== -1) {
-//         tags[index] = tagObject.toObj();
-//         return tags[index];
-//     }
-//     return null;
-// };
-
-// exports.deleteTag = async (id) => {
-//     const index = tags.findIndex(t => t.id === parseInt(id));
-//     if (index !== -1) {
-//         const deletedTag = tags[index];
-//         tags.splice(index, 1);
-//         return deletedTag;
-//     }
-//     return null;
-// };
-
-const { dbConnect } = require('../database/db.connector');
-const { Tag } = require('../models/tag');
-
-const COLLECTION = "tags";
+// =============================================
+// Obtener siguiente ID numérico (manual)
+// =============================================
+async function getNextTagId() {
+    const last = await TagModel.find().sort({ id: -1 }).limit(1);
+    return last.length > 0 ? last[0].id + 1 : 1;
+}
 
 module.exports = {
 
-    async findByName(name) {
-        const db = await dbConnect();
-        return await db.collection(COLLECTION).findOne({ name: name });
-    },
+    // =============================================
+    // Crear nuevo Tag
+    // =============================================
+    async createTag(data) {
+        const nextId = await getNextTagId();
 
-    async getTagById(id) {
-        const db = await dbConnect();
-        return await db.collection(COLLECTION).findOne({ id: id });
-    },
-
-    async getTagsByUser(id_user) {
-        const db = await dbConnect();
-        return await db.collection(COLLECTION).find({ id_user: id_user }).toArray();
-    },
-
-    async saveTag(tagInstance) {
-        const db = await dbConnect();
-
-        const last = await db.collection(COLLECTION)
-            .find({})
-            .sort({ id: -1 })
-            .limit(1)
-            .toArray();
-
-        const nextId = (last.length > 0) ? last[0].id + 1 : 1;
-
-        const tagObj = tagInstance.toObj();
-        tagObj.id = nextId;
-
-        await db.collection(COLLECTION).insertOne(tagObj);
-
-        return tagObj;
-    },
-
-    async updateTag(id, tagInstance) {
-        const db = await dbConnect();
-
-        const result = await db.collection(COLLECTION).updateOne(
-            { id: id },
-            { $set: tagInstance.toObj() }
-        );
-
-        if (result.matchedCount === 0) {
-            return null;
-        }
-
-        return tagInstance.toObj();
-    },
-
-    async deleteTag(id) {
-        const db = await dbConnect();
-
-        const deleted = await db.collection(COLLECTION).findOneAndDelete({
-            id: id
+        const tag = new TagModel({
+            id: nextId,
+            name: data.name,
+            id_user: data.id_user
         });
 
-        return deleted.value;
+        return await tag.save();
+    },
+
+    // =============================================
+    // Buscar por ID
+    // =============================================
+    async getTagById(id) {
+        return await TagModel.findOne({ id: parseInt(id) });
+    },
+
+    // =============================================
+    // Buscar por nombre
+    // =============================================
+    async findByName(name) {
+        return await TagModel.findOne({ name });
+    },
+
+    // =============================================
+    // Buscar por usuario
+    // =============================================
+    async getTagsByUser(id_user) {
+        return await TagModel.find({ id_user: parseInt(id_user) });
+    },
+
+    // =============================================
+    // Actualizar Tag
+    // =============================================
+    async updateTag(id, updateFields) {
+        return await TagModel.findOneAndUpdate(
+            { id: parseInt(id) },
+            { $set: updateFields },
+            { new: true }
+        );
+    },
+
+    // =============================================
+    // Eliminar
+    // =============================================
+    async deleteTag(id) {
+        return await TagModel.findOneAndDelete({ id: parseInt(id) });
     }
 };

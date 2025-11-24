@@ -1,66 +1,103 @@
-# --- Variables en test.http ---
-@url = http://127.0.0.1:3000 
-@admin_auth = admin_auth_key_secreta 
-@user1_pass = Pw12345678# 
-@user2_pass = Pw23456789# 
-@user1_id = 1 
-@user2_id = 2
+# =========================================================================
+# 1. CREAR USUARIO BASE (DEPORTES)
+# =========================================================================
 
-### 2.1: REGISTRAR Usuario 1 (ID 1)
-# Esperado: 201 Created. Documento User creado en MongoDB.
-POST {{url}}/users
+### Crear Usuario Deportivo
+POST http://127.0.0.1:3000/users
 Content-Type: application/json
 
 {
-    "name": "Usuario Test Uno",
-    "email": "test1@cineclick.com",
-    "password": "{{user1_pass}}",
-    "confirm_password": "{{user1_pass}}"
+    "name": "Aficionado Deportes",
+    "email": "fan_deportes@miapp.com",
+    "password": "SuperPassDeportes#1",
+    "confirm_password": "SuperPassDeportes#1"
 }
 
-### 2.2: PRUEBA DE EXCEPCIÓN: Email Duplicado
-# Esperado: 400 Bad Request. Body: "Email already in use."
-POST {{url}}/users
+
+
+# =========================================================================
+# 2. TAGS (DEPORTES)
+# =========================================================================
+
+### Crear Tag: Fútbol
+POST http://127.0.0.1:3000/tags
+x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "Usuario Fail",
-    "email": "test1@cineclick.com",
-    "password": "Pw12345678#",
-    "confirm_password": "Pw12345678#"
+    "name": "Fútbol"
 }
 
-### 3.1: CONSULTA TOTAL (Admin Auth)
-# Esperado: 200 OK. JSON con total=1 y data[].
-GET {{url}}/users?page=1&limit=5
-x-auth: {{admin_auth}}
-
-### 3.2: CONSULTA INDIVIDUAL (Propietario)
-# Esperado: 200 OK. Regresa el objeto del Usuario 1.
-GET {{url}}/users/1
-x-auth: {{user1_pass}}
-
-### 4.1: ACTUALIZAR Nombre del Usuario 1
-# Esperado: 200 OK. Regresa el Usuario 1 con el nuevo nombre.
-PATCH {{url}}/users/1
-x-auth: {{user1_pass}}
+### Crear Tag: Basketball
+POST http://127.0.0.1:3000/tags
+x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "Usuario Actualizado PATCH"
+    "name": "Basketball"
 }
 
-### 4.2: PRUEBA DE EXCEPCIÓN: Autenticación Inválida
-# Esperado: 401 Unauthorized. Body: "Unauthorized: Invalid password for this user."
-PATCH {{url}}/users/1
-x-auth: ContrasenaIncorrecta
+### Obtener Tag 1 (ajusta ID según corresponda)
+GET http://127.0.0.1:3000/tags/5
+x-auth: SuperPassDeportes#1
+
+### Actualizar Tag 1
+PATCH http://127.0.0.1:3000/tags/6
+x-auth: SuperPassDeportes#1
 Content-Type: application/json
 
 {
-    "name": "No debe actualizarse"
+    "name": "Fútbol Internacional"
 }
 
-### 5.1: ELIMINAR Usuario 1
-# Esperado: 200 OK. Mensaje de confirmación y el objeto del usuario eliminado.
-DELETE {{url}}/users/1
-x-auth: {{user1_pass}}
+
+
+# =========================================================================
+# 3. REVIEWS (DEPORTES) + INTEGRIDAD CON TAGS
+# =========================================================================
+
+### Crear Review: Opinión deportiva usando Tag 1
+POST http://127.0.0.1:3000/reviews
+x-auth: SuperPassDeportes#1
+Content-Type: application/json
+
+{
+    "title": "Opinión sobre la Champions League 2025",
+    "description": "Análisis de equipos, rendimiento y predicciones.",
+    "due_date": "2025-11-15",
+    "owner": 1, 
+    "tags": [1],  
+    "rating": 9
+}
+
+### Intentar eliminar Tag 1 (DEBE FALLAR)
+DELETE http://127.0.0.1:3000/tags/1
+x-auth: SuperPassDeportes#1
+
+### Actualizar Review 1 (ajusta ID después)
+PATCH http://127.0.0.1:3000/reviews/6
+x-auth: SuperPassDeportes#1
+Content-Type: application/json
+
+{
+    "description": "Opinión actualizada después de los octavos.",
+    "rating": 7
+}
+
+### Eliminar Review 1
+DELETE http://127.0.0.1:3000/reviews/6
+x-auth: SuperPassDeportes#1
+
+### Ahora sí: Eliminar Tag 1
+DELETE http://127.0.0.1:3000/tags/6
+x-auth: SuperPassDeportes#1
+
+
+
+# =========================================================================
+# 4. ELIMINAR USUARIO BASE (DEPORTES)
+# =========================================================================
+
+### Eliminar Usuario
+DELETE http://127.0.0.1:3000/users/6
+x-auth: SuperPassDeportes#1

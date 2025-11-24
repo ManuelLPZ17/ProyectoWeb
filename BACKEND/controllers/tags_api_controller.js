@@ -1,114 +1,134 @@
 // BACKEND/controllers/tags_api_controller.js
 
-const { Tag, TagException } = require('../models/tag');
 const TagService = require('../services/tags_service');
-const ReviewService = require('../services/reviews_service'); // Para validar integridad (regla P3)
+const ReviewService = require('../services/reviews_service');
 
+// ===============================================================
 // 1. CREAR ETIQUETA (POST /tags)
+// ===============================================================
 exports.createTag = async (req, res) => {
     try {
-        const { name, color } = req.body;
-        // Asumiendo que id_user viene del middleware de autenticación (req.userId)
-        const id_user = req.userId || 1; // Usamos '1' como fallback si no hay middleware de auth
+        const userId = req.userId;
 
-        // 1. Validación de unicidad de nombre (similar a email)
-        const tagExists = await TagService.findByName(name);
-        if (tagExists) {
-            return res.status(400).send("Tag name already in use.");
+        if (!req.body.name) {
+            return res.status(400).send("Tag name is required.");
         }
-        
-        // 2. Crear el objeto Tag (Esto ejecuta las validaciones de los setters: nombre, color)
-        const newTag = new Tag(name, color, id_user);
-        
-        // 3. Persistir en la DB (servicio)
-        await TagService.saveTag(newTag);
 
-        res.status(201).json({ message: "Tag created successfully.", tag: newTag.toObj() });
+        const tag = await TagService.createTag({
+            name: req.body.name,
+            id_user: userId
+        });
+
+        res.status(201).send(tag);
+
     } catch (err) {
-        // Captura excepciones del modelo (ej. Color inválido, nombre vacío)
-        res.status(400).send(err.errorMessage || "Error creating tag. Invalid data.");
+        console.error("❌ Error creating tag:", err);
+        res.status(400).send(err.message || "Error creating tag.");
     }
 };
 
-// 2. OBTENER ETIQUETA por ID (GET /tags/:id)
+
+// ===============================================================
+// 2. OBTENER ETIQUETA POR ID (GET /tags/:id)
+// ===============================================================
 exports.getTagById = async (req, res) => {
     try {
         const id = parseInt(req.params.id);
+
+        const tag = await TagService.getTagById(id);
+        if (!tag) {
+            return res.status(404).send("Tag not found.");
+        }
+
+        res.json(tag);
+
+    } catch (err) {
+        console.error("❌ Error retrieving tag:", err);
+        res.status(500).send("Error retrieving tag.");
+    }
+};
+
+
+// ===============================================================
+// 3. LISTAR TODAS LAS ETIQUETAS DEL USUARIO AUTENTICADO
+//    (GET /tags)
+// ===============================================================
+exports.getAllTagsByUser = async (req, res) => {
+    try {
+        const userId = req.userId;
+
+        const tags = await TagService.getTagsByUser(userId);
+
+        res.json(tags);
+
+    } catch (err) {
+        console.error("❌ Error retrieving tags:", err);
+        res.status(500).send("Error retrieving tags.");
+    }
+};
+
+
+// ===============================================================
+// 4. ACTUALIZAR ETIQUETA (PATCH /tags/:id)
+// ===============================================================
+exports.updateTag = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const newName = req.body.name;
+
+        if (!newName) {
+            return res.status(400).send("Only 'name' can be updated.");
+        }
+
         const tag = await TagService.getTagById(id);
 
         if (!tag) {
             return res.status(404).send("Tag not found.");
         }
-        res.json(tag); 
-    } catch (err) {
-        res.status(500).send("Error retrieving tag details.");
-    }
-};
 
-// 3. OBTENER TODAS las Etiquetas de un Usuario (GET /tags?page=X...)
-exports.getAllTagsByUser = async (req, res) => {
-    // Aquí se requiere la autenticación para obtener el ID del usuario (req.userId)
-    // Lógica de paginación...
-    res.status(501).send("Not Implemented Yet: getAllTagsByUser (Paginación)");
-};
+        const updatedTag = await TagService.updateTag(id, { name: newName });
 
-// 4. ACTUALIZAR ETIQUETA (PATCH /tags/:id)
-exports.updateTag = async (req, res) => {
-    const id = parseInt(req.params.id);
-    const updateInfo = req.body;
-    const updateKeys = Object.keys(updateInfo);
-    
-    try {
-        let tag = await TagService.getTagById(id);
-        if (!tag) { return res.status(404).send("Tag not found."); }
-        
-        // 1. Crear instancia del Modelo para usar setters y validación
-        const currentTag = new Tag(tag.name, tag.color, tag.id_user);
-        
-        let updatedCount = 0;
-        
-        // 2. Aplicar solo los campos permitidos (name y color)
-        updateKeys.forEach(key => {
-            if (['name', 'color'].includes(key) && updateInfo[key] !== undefined) {
-                currentTag[key] = updateInfo[key];
-                updatedCount++;
-            }
+        res.json({
+            message: "Tag updated!",
+            tag: updatedTag
         });
-        
-        // 3. Si no se actualizó nada
-        if (updatedCount === 0) {
-            throw new TagException("No valid fields provided for update (only name and color are allowed).");
-        }
-        
-        // 4. Persistir los cambios
-        await TagService.updateTag(id, currentTag);
 
-        res.json({ message: "Tag updated!", tag: currentTag.toObj() });
     } catch (err) {
-        res.status(400).send(err.errorMessage || "Update failed due to invalid data.");
+        console.error("❌ Error updating tag:", err);
+        res.status(500).send("Error updating tag.");
     }
 };
 
-// 5. ELIMINAR ETIQUETA (DELETE /tags/:id)
-exports.deleteTag = async (req, res) => {
-    const id = parseInt(req.params.id);
 
+// ===============================================================
+// 5. ELIMINAR ETIQUETA (DELETE /tags/:id)
+// ===============================================================
+exports.deleteTag = async (req, res) => {
     try {
-        // 1. Validar integridad: ¿La etiqueta está en alguna reseña?
-        // (Requisito de la práctica 2: Indicar a qué tareas están asignadas)
+        const id = parseInt(req.params.id);
+
+        // Validación: ¿Está usada en una review?
         const reviews = await ReviewService.findReviewsByTagId(id);
-        if (reviews && reviews.length > 0) {
-            const reviewIds = reviews.map(r => r.id).join(', ');
-            return res.status(400).send(`Cannot delete Tag. Used in Reviews: ${reviewIds}`);
+
+        if (reviews.length > 0) {
+            const ids = reviews.map(r => r.id).join(", ");
+            return res.status(400).send(`Cannot delete Tag. Used in Reviews: ${ids}`);
         }
 
-        // 2. Eliminar de la DB
-        const deletedTag = await TagService.deleteTag(id);
+        const deleted = await TagService.deleteTag(id);
 
-        if (!deletedTag) { return res.status(404).send("Tag not found for deletion."); }
+        if (!deleted) {
+            return res.status(404).send("Tag not found.");
+        }
 
-        res.json({ message: `Tag with id ${id} deleted!`, tag: deletedTag });
+        res.json({
+            message: `Tag with id ${id} deleted!`,
+            tag: deleted
+        });
+
     } catch (err) {
+        console.error("❌ Error deleting tag:", err);
         res.status(500).send("Error deleting tag.");
     }
 };
+

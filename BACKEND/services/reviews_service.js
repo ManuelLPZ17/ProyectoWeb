@@ -1,59 +1,65 @@
 // BACKEND/services/reviews_service.js
 
-const ReviewMongooseModel = require('../schemas/reviews_schema'); // Importa el modelo de Mongoose
-// const Review = require('../models/review'); // (Puedes importar el modelo JS si necesitas sus reglas)
+const ReviewModel = require('../schemas/review_schema');
 
+// Obtener siguiente ID consecutivo
+async function getNextReviewId() {
+    const last = await ReviewModel.find().sort({ id: -1 }).limit(1).exec();
+    return last.length > 0 ? last[0].id + 1 : 1;
+}
 
-// 1. GUARDAR una nueva reseña (POST /reviews)
-exports.saveReview = async (reviewObject) => {
-    // 1. Crea el objeto Mongoose a partir de los datos validados por el modelo JS
-    const newReview = new ReviewMongooseModel(reviewObject.toObj());
-    
-    // 2. Guarda y devuelve el objeto guardado
-    return newReview.save(); 
-};
+module.exports = {
 
-// 2. OBTENER reseña por ID (GET /reviews/:id)
-exports.getReviewById = async (id) => {
-    // Busca por el ID consecutivo numérico
-    return ReviewMongooseModel.findOne({ id: parseInt(id) }).exec();
-};
+    // CREATE
+    async createReview(data) {
+        const nextId = await getNextReviewId();
 
-// 3. OBTENER todas las reseñas
-exports.getAllReviews = async () => {
-    // Devuelve todos los documentos
-    return ReviewMongooseModel.find({}).exec();
-};
+        const review = new ReviewModel({
+            id: nextId,
+            title: data.title,
+            description: data.description || "",
+            due_date: data.due_date,
+            owner: data.owner,
+            status: 'A',
+            tags: data.tags || [],
+            rating: data.rating
+        });
 
-// 4. ACTUALIZAR reseña (PATCH /reviews/:id)
-exports.updateReview = async (id, updateFields) => {
-    // Usa findOneAndUpdate para aplicar solo los cambios y ejecutar validadores
-    return ReviewMongooseModel.findOneAndUpdate(
-        { id: parseInt(id) }, 
-        { $set: updateFields },
-        { new: true, runValidators: true }
-    ).exec();
-};
+        return await review.save();
+    },
 
-// 5. ELIMINAR reseña (DELETE /reviews/:id)
-exports.deleteReview = async (id) => {
-    // Busca y elimina por el ID numérico
-    return ReviewMongooseModel.findOneAndDelete({ id: parseInt(id) }).exec();
-};
+    // READ: get review by ID
+    async getReviewById(id) {
+        return ReviewModel.findOne({ id: parseInt(id) }).exec();
+    },
 
-// 6. VALIDACIÓN DE INTEGRIDAD: Buscar Reseñas por Propietario (Owner)
-exports.findReviewsByOwner = async (ownerId) => {
-    // CORRECCIÓN: Usar find() para devolver un array de documentos Mongoose
-    try {
-        return ReviewMongooseModel.find({ owner: parseInt(ownerId) }).exec();
-    } catch (e) {
-        // En caso de error de Mongoose, devolvemos un array vacío para no bloquear el sistema.
-        console.error("Mongoose error in findReviewsByOwner:", e);
-        return [];
+    // READ: get reviews by user
+    async getReviewsByUser(ownerId) {
+        return ReviewModel.find({ owner: parseInt(ownerId) }).exec();
+    },
+
+    // UPDATE
+    async updateReview(id, updateFields) {
+
+        // Si viene due_date, Mongoose debe convertirla a Date
+        if (updateFields.due_date) {
+            updateFields.due_date = new Date(updateFields.due_date);
+        }
+
+        return ReviewModel.findOneAndUpdate(
+            { id: parseInt(id) },
+            { $set: updateFields },
+            { new: true }
+        ).exec();
+    },
+
+    // DELETE
+    async deleteReview(id) {
+        return ReviewModel.findOneAndDelete({ id: parseInt(id) }).exec();
+    },
+
+    // EXTRA: buscar reviews que contengan cierto tag
+    async findReviewsByTagId(tagId) {
+        return ReviewModel.find({ tags: parseInt(tagId) }).exec();
     }
- };
-// 7. VALIDACIÓN DE INTEGRIDAD: Buscar Reseñas por Etiqueta (Tag)
-exports.findReviewsByTagId = async (tagId) => {
-    // Busca todas las reseñas donde el array 'tags' contiene el ID de la etiqueta
-    return ReviewMongooseModel.find({ tags: parseInt(tagId) }).exec();
 };

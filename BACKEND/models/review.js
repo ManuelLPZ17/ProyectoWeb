@@ -51,8 +51,13 @@ class Review {
 
     // --- SETTERS con Validación ---
     set id(value) {
-        throw new ReviewException("IDs are auto-generated. Cannot be modified."); // Regla: ID no modificable
+    // Solo lanza excepción si el ID ya existe. 
+    // Esto permite que el servicio asigne el ID numérico (consecutivo)
+    if (this.#id) { 
+        throw new ReviewException("IDs are auto-generated and cannot be modified after creation.");
     }
+    this.#id = value;
+}
     set title(value) {
         if (!value) {
             throw new ReviewException("Review title cannot be empty."); // Regla: No vacío

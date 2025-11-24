@@ -6,26 +6,34 @@ const authMiddleware = require('../middlewares/authMiddleware');
 
 const routerReviews = express.Router();
 
-// Middleware de autenticación para todas las rutas de reseñas (excepto GET paginado)
-// routerReviews.use('/', authMiddleware.authRequiredMiddleware); // Asumiendo que POST requiere saber quién es el usuario
+/* ================================
+   RUTAS DE RESEÑAS
+   ================================ */
 
-// POST /reviews: Crea una nueva reseña (Requiere autenticación)
+/*
+   Todas las rutas (menos GET paginado) requieren autenticación.
+*/
+routerReviews.use(authMiddleware.authRequiredMiddleware);
+
+/* ---------- 1. CREAR RESEÑA (POST /reviews) ---------- */
 routerReviews.post('/', reviewsController.createReview);
 
-// GET /reviews: Obtener todas las reseñas del usuario (Requiere autenticación)
-routerReviews.get('/', authMiddleware.authRequiredMiddleware, reviewsController.getAllReviewsByUser);
+/* ---------- 2. OBTENER TODAS LAS RESEÑAS DEL USUARIO (GET /reviews) ---------- */
+routerReviews.get('/', reviewsController.getAllReviewsByUser);
 
-// Rutas por ID (GET, PATCH, DELETE)
-// Aplicamos el middleware de propietario para asegurar que el usuario sea el dueño de la reseña
+
+/* ---------- MIDDLEWARE DE PROPIETARIO PARA RUTAS CON :id ---------- */
+// Este middleware valida que LA RESEÑA pertenezca al usuario autenticado
 routerReviews.use('/:id', authMiddleware.authOwnerMiddleware);
 
-// GET /reviews/:id
+/* ---------- 3. GET /reviews/:id ---------- */
 routerReviews.get('/:id', reviewsController.getReviewById);
 
-// PATCH /reviews/:id
+/* ---------- 4. PATCH /reviews/:id ---------- */
 routerReviews.patch('/:id', reviewsController.updateReview);
 
-// DELETE /reviews/:id
+/* ---------- 5. DELETE /reviews/:id ---------- */
 routerReviews.delete('/:id', reviewsController.deleteReview);
+
 
 module.exports = routerReviews;
