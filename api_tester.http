@@ -32,7 +32,7 @@ Content-Type: application/json
 POST http://127.0.0.1:3000/watchlist
 x-auth: SuperPassDeportes#1
 Content-Type: application/json
-
+    
 {
     "id_movie": 202
 }
@@ -72,4 +72,35 @@ x-auth: SuperPassDeportes#1
 
 ### Eliminar Usuario (debe estar vacía la watchlist antes)
 DELETE http://127.0.0.1:3000/users/1
+x-auth: SuperPassDeportes#1
+
+
+
+###
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+x-auth: SuperPassDeportes#1
+
+{
+    "id": 1,
+    "id_review": 1,
+    "owner": 1,
+    "content": "Excelente reseña, bien explicada!",
+    "date": "2025-11-23"
+}
+
+### get
+GET http://localhost:3000/api/comments?reviewId=1
+
+### uptade
+PATCH http://localhost:3000/api/comments/2
+Content-Type: application/json
+x-auth: SuperPassDeportes#1
+
+{
+    "content": "Actualizando el comentario!"
+}
+
+###delete
+DELETE http://localhost:3000/api/comments/2
 x-auth: SuperPassDeportes#1

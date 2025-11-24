@@ -15,6 +15,7 @@ const port = 3000;
 app.use(express.json()); // Permite que la API interprete los JSON del body [cite: 106]
 app.use(cors());         // Permite peticiones desde el frontend (puertos diferentes)
 app.use(router);         // Usa el router principal para manejar todas las rutas [cite: 107]
+app.use('/api', router);
 
 // Conecta a la base de datos y luego inicia el servidor
 dbConnect().then(() => {

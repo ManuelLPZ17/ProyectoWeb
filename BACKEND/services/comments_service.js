@@ -1,22 +1,29 @@
 // BACKEND/services/comments_service.js
 
 // SIMULACIÓN DE DATOS
-let comments = []; 
+const CommentMongooseModel = require('../schemas/comments_schema');
 
-exports.saveComment = async (commentObject) => {
-    comments.push(commentObject.toObj());
-    return commentObject.toObj();
+exports.saveComment = async (commentJS) => {
+    const newComment = new CommentMongooseModel(commentJS.toObj());
+    return newComment.save();
+};
+
+exports.findCommentsByReviewId = async (reviewId) => {
+    return CommentMongooseModel.find({ id_review: reviewId }).exec();
 };
 
 exports.getCommentById = async (id) => {
-    return comments.find(c => c.id === parseInt(id)) || null;
+    return CommentMongooseModel.findOne({ id: parseInt(id) }).exec();
 };
 
-exports.getAllComments = async () => {
-    return comments;
+exports.updateComment = async (id, updateData) => {
+    return CommentMongooseModel.findOneAndUpdate(
+        { id: parseInt(id) },
+        updateData,
+        { new: true } // devuelve el actualizado
+    ).exec();
 };
 
-// Necesario para la validación de integridad: verificar si una reseña tiene comentarios
-exports.findCommentsByReviewId = async (reviewId) => {
-    return comments.filter(c => c.id_review === parseInt(reviewId));
+exports.deleteComment = async (id) => {
+    return CommentMongooseModel.findOneAndDelete({ id: parseInt(id) }).exec();
 };

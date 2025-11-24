@@ -98,6 +98,54 @@ exports.deleteComment = async (req, res) => {
 
 // 4. ACTUALIZAR COMENTARIO (PATCH /comments/:id)
 exports.updateComment = async (req, res) => {
-    // Solo se permite actualizar el contenido (content).
-    res.status(501).send("Not Implemented Yet: Update Comment");
+    try {
+        const commentId = parseInt(req.params.id);
+        const { content } = req.body;
+        const id_user = req.userId || 1; // Usuario autenticado
+
+        // 1. Validar que el comentario exista
+        const commentToEdit = await CommentService.getCommentById(commentId);
+        if (!commentToEdit) {
+            return res.status(404).send("Comment not found.");
+        }
+
+        // 2. Validar que este usuario sea el dueño del comentario
+        if (commentToEdit.id_user !== id_user) {
+            return res.status(403).send("Forbidden: You do not own this comment.");
+        }
+
+        // 3. Validar que el contenido no esté vacío (modelo también lo valida)
+        if (!content || content.trim().length === 0) {
+            return res.status(400).send("Content cannot be empty.");
+        }
+
+        // 4. Actualizar en DB
+        const updatedComment = await CommentService.updateComment(commentId, { content });
+
+        res.json({
+            message: "Comment updated successfully.",
+            comment: updatedComment
+        });
+
+    } catch (err) {
+        res.status(400).send(err.errorMessage || "Error updating comment.");
+    }
+};
+
+
+
+exports.getCommentById = async (req, res) => {
+    try {
+        const id = parseInt(req.params.id);
+        const comment = await CommentService.getCommentById(id);
+
+        if (!comment) {
+            return res.status(404).send("Comment not found.");
+        }
+
+        res.json(comment);
+        
+    } catch (err) {
+        res.status(500).send("Error retrieving comment.");
+    }
 };

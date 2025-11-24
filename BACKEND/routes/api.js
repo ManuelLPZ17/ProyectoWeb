@@ -10,6 +10,7 @@ const routerApi = express.Router();
 const usersRouter = require('./users');
 const reviewsRouter = require('./reviews'); // Faltan crear
 const tagsRouter = require('./tags');       // Faltan crear
+const commentsRouter = require('./comments');
 
 // --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
 
@@ -54,5 +55,5 @@ routerApi.get('/tasks.html', (req, res) => {
 routerApi.use('/users', usersRouter);
 routerApi.use('/reviews', reviewsRouter); 
 routerApi.use('/tags', tagsRouter);
-
+routerApi.use('/comments', commentsRouter);
 module.exports = routerApi;
