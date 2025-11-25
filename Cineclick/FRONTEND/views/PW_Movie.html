@@ -314,6 +314,75 @@
 </div>
 
 
+
+<!-- MODAL EDITAR COMENTARIO -->
+<div class="modal fade" id="modalEditarComentario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Editar comentario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="mb-3">
+                    <label class="form-label">Comentario</label>
+                    <textarea class="form-control" id="editCuerpoComentario" rows="4"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn-orange w-100 fw-bold" id="btnActualizarComentario">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR COMENTARIO -->
+<div class="modal fade" id="modalEliminarComentario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-trash me-2"></i>Eliminar comentario
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <p class="fw-semibold mb-2">¿Quieres eliminar este comentario?</p>
+                <p class="text-danger fw-bold">Esta acción no se puede deshacer.</p>
+            </div>
+
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger px-4" id="confirmDeleteComment">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR COMENTARIO -->
+<div class="modal fade" id="modalCrearComentario" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Escribir comentario</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="mb-3">
+                    <label class="form-label">Comentario</label>
+                    <textarea class="form-control" id="nuevoComentarioCuerpo" rows="4" placeholder="Escribe tu comentario..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn-orange w-100 fw-bold" id="btnCrearComentario">Publicar comentario</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -358,68 +427,352 @@
         }
 
            
-          async function loadMovieReviews(movieId) {
-            const reviewsContainer = document.querySelector(".reviews");
+//         async function loadMovieReviews(movieId) {
+//             const reviewsContainer = document.querySelector(".reviews");
 
-            // Mantener el título
+//             // Mantener el título
+//             reviewsContainer.innerHTML = `
+//                 <h4>Reseñas de la comunidad</h4>
+//                 <p class="text-secondary">Cargando reseñas...</p>
+//             `;
+
+//             try {
+//                 // 1. Usar la ruta correcta
+//                 const response = await fetch(`http://localhost:3000/api/reviews/all`);
+
+//                 if (!response.ok) throw new Error("No se pudieron obtener las reseñas");
+
+//                 const allReviews = await response.json();
+
+//                 // 2. Filtrar por película
+//                 const movieReviews = allReviews.filter(r => r.movie_id == movieId);
+
+//                 // 3. Si no hay reseñas, mostrar aviso
+//                 if (movieReviews.length === 0) {
+//                     reviewsContainer.innerHTML = `
+//                         <h4>Reseñas de la comunidad</h4>
+//                         <p class="text-secondary">No hay reseñas para esta película aún.</p>
+//                     `;
+//                     return;
+//                 }
+
+//                 // 4. Limpiar debajo del título
+//                 reviewsContainer.innerHTML = `<h4>Reseñas de la comunidad</h4>`;
+
+//                 // 5. Crear las tarjetas
+//                 movieReviews.forEach(review => {
+//                     const div = document.createElement("div");
+//                     div.className = "review-card mt-3";
+
+//                     div.innerHTML = `
+//                         <div class="review-header">
+//                             <span class="review-user">${review.owner_name || "Usuario"}</span>
+
+//                             <div class="review-actions">
+//                                 <i class="fas fa-edit edit-review" data-id="${review.id}"></i>
+//                                 <i class="fas fa-trash delete-review" data-id="${review.id}"></i>
+//                             </div>
+//                         </div>
+
+//                         <div class="review-title">${review.title}</div>
+//                         <div class="review-text">${review.description}</div>
+                        
+//                         <!-- BOTONES DE COMENTARIOS -->
+//     <div class="mt-3">
+//         <button class="btn btn-sm btn-primary ver-comentarios-btn" data-id="${review.id}">
+//             Ver comentarios
+//         </button>
+
+//         <button class="btn btn-sm btn-outline-success escribir-comentario-btn" data-id="${review.id}">
+//             Escribir comentario
+//         </button>
+//     </div>
+
+//     <!-- CONTENEDOR DE COMENTARIOS -->
+//     <div class="comentarios-container mt-2" id="comentarios-${review.id}" style="display:none;">
+//         <p class="text-secondary small">Cargando comentarios...</p>
+//     </div>
+
+//                         `;
+
+
+//                     reviewsContainer.appendChild(div);
+//                 });
+
+//             } catch (error) {
+//                 console.error(error);
+//                 reviewsContainer.innerHTML = `
+//                     <h4>Reseñas de la comunidad</h4>
+//                     <p class="text-danger">Error al cargar reseñas.</p>
+//                 `;
+//             }
+// }
+
+
+async function loadMovieReviews(movieId) {
+    const reviewsContainer = document.querySelector(".reviews");
+
+    reviewsContainer.innerHTML = `
+        <h4>Reseñas de la comunidad</h4>
+        <p class="text-secondary">Cargando reseñas...</p>
+    `;
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/reviews/all`);
+        if (!response.ok) throw new Error("No se pudieron obtener las reseñas");
+
+        const allReviews = await response.json();
+        const movieReviews = allReviews.filter(r => r.movie_id == movieId);
+
+        if (movieReviews.length === 0) {
             reviewsContainer.innerHTML = `
                 <h4>Reseñas de la comunidad</h4>
-                <p class="text-secondary">Cargando reseñas...</p>
+                <p class="text-secondary">No hay reseñas para esta película aún.</p>
             `;
+            return;
+        }
 
-            try {
-                // 1. Usar la ruta correcta
-                const response = await fetch(`http://localhost:3000/api/reviews/all`);
+        reviewsContainer.innerHTML = `<h4>Reseñas de la comunidad</h4>`;
 
-                if (!response.ok) throw new Error("No se pudieron obtener las reseñas");
+        const currentUser = localStorage.getItem("user_id");
 
-                const allReviews = await response.json();
+        movieReviews.forEach(review => {
+            const div = document.createElement("div");
+            div.className = "review-card mt-3";
 
-                // 2. Filtrar por película
-                const movieReviews = allReviews.filter(r => r.movie_id == movieId);
+           // console.log("Review:", review);
 
-                // 3. Si no hay reseñas, mostrar aviso
-                if (movieReviews.length === 0) {
-                    reviewsContainer.innerHTML = `
-                        <h4>Reseñas de la comunidad</h4>
-                        <p class="text-secondary">No hay reseñas para esta película aún.</p>
-                    `;
-                    return;
-                }
+            div.innerHTML = `
+                <div class="review-header">
+                    <span class="review-user">${review.owner_name || "Usuario"}</span>
 
-                // 4. Limpiar debajo del título
-                reviewsContainer.innerHTML = `<h4>Reseñas de la comunidad</h4>`;
-
-                // 5. Crear las tarjetas
-                movieReviews.forEach(review => {
-                    const div = document.createElement("div");
-                    div.className = "review-card mt-3";
-
-                    div.innerHTML = `
-                        <div class="review-header">
-                            <span class="review-user">${review.owner_name || "Usuario"}</span>
-
-                            <div class="review-actions">
+                    <div class="review-actions">
+                        ${
+                            review.owner == currentUser ? `
                                 <i class="fas fa-edit edit-review" data-id="${review.id}"></i>
                                 <i class="fas fa-trash delete-review" data-id="${review.id}"></i>
-                            </div>
-                        </div>
+                            ` : ""
+                        }
+                    </div>
+                </div>
 
-                        <div class="review-title">${review.title}</div>
-                        <div class="review-text">${review.description}</div>
-                    `;
+                <div class="review-title">${review.title}</div>
+                <div class="review-text">${review.description}</div>
 
-                    reviewsContainer.appendChild(div);
-                });
+                <!-- BOTONES DE COMENTARIOS -->
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-primary ver-comentarios-btn" data-id="${review.id}">
+                        Ver comentarios
+                    </button>
+                    <button class="btn btn-sm btn-outline-success escribir-comentario-btn" data-id="${review.id}">
+                        Escribir comentario
+                    </button>
+                </div>
 
-            } catch (error) {
-                console.error(error);
-                reviewsContainer.innerHTML = `
-                    <h4>Reseñas de la comunidad</h4>
-                    <p class="text-danger">Error al cargar reseñas.</p>
-                `;
-            }
+                <!-- CONTENEDOR DE COMENTARIOS -->
+                <div class="comentarios-container mt-2" id="comentarios-${review.id}" style="display:none;">
+                    <p class="text-secondary small">Cargando comentarios...</p>
+                </div>
+            `;
+
+            reviewsContainer.appendChild(div);
+        });
+
+    } catch (error) {
+        console.error(error);
+        reviewsContainer.innerHTML = `
+            <h4>Reseñas de la comunidad</h4>
+            <p class="text-danger">Error al cargar reseñas.</p>
+        `;
+    }
 }
+
+
+// CLICK EN "Ver comentarios"
+
+// document.addEventListener("click", (e) => {
+//     if (e.target.classList.contains("ver-comentarios-btn")) {
+//         const reviewId = e.target.dataset.id;
+
+//         // Buscar contenedor
+//         let cont = document.getElementById(`comentarios-${reviewId}`);
+
+//         // Si no existe, crearlo dinámicamente
+//         if (!cont) {
+//             const reviewCard = e.target.closest('.review-card'); // busca la tarjeta padre
+//             cont = document.createElement('div');
+//             cont.className = 'comentarios-container mt-2';
+//             cont.id = `comentarios-${reviewId}`;
+//             cont.style.display = 'none';
+//             reviewCard.appendChild(cont);
+//         }
+
+//         // Alternar visibilidad
+//         if (cont.style.display === "none") {
+//             cont.style.display = "block";
+//             loadComentarios(reviewId, cont);
+//         } else {
+//             cont.style.display = "none";
+//         }
+//     }
+// });
+
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("ver-comentarios-btn")) {
+        const reviewId = e.target.dataset.id;
+
+        // Buscar contenedor de comentarios
+        let cont = document.getElementById(`comentarios-${reviewId}`);
+
+        // Buscar la tarjeta de la reseña
+        const reviewCard = e.target.closest('.review-card');
+
+        // Si no existe contenedor, crear solo si reviewCard existe
+        if (!cont && reviewCard) {
+            cont = document.createElement('div');
+            cont.className = 'comentarios-container mt-2';
+            cont.id = `comentarios-${reviewId}`;
+            cont.style.display = 'none';
+            reviewCard.appendChild(cont);
+        }
+
+        // Si cont todavía no existe (algo salió mal), salir
+        if (!cont) return;
+
+        // Alternar visibilidad y cargar comentarios
+        if (cont.style.display === "none") {
+            cont.style.display = "block";
+            loadComentarios(reviewId, cont);
+        } else {
+            cont.style.display = "none";
+        }
+    }
+});
+
+/**
+ * Cargar comentarios de un review
+ * GET /api/comments?reviewId=ID
+ */
+// async function loadComentarios(reviewId, cont) {
+//     cont.innerHTML = `<p class="text-secondary small">Cargando comentarios...</p>`;
+
+//     try {
+//         const res = await fetch(`http://localhost:3000/api/comments?reviewId=${reviewId}`);
+
+//         if (!res.ok) {
+//             cont.innerHTML = `<p class="text-danger small">No se pudieron obtener los comentarios.</p>`;
+//             return;
+//         }
+
+//         const payload = await res.json();
+//         const comments = Array.isArray(payload) ? payload : (payload.data || []);
+
+//         if (comments.length === 0) {
+//             cont.innerHTML = `<p class="text-secondary small">No hay comentarios aún.</p>`;
+//             return;
+//         }
+
+//         cont.innerHTML = comments.map(c => `
+//             <div class="p-2 border rounded mb-2">
+//                 <div class="d-flex justify-content-between">
+//                     <strong>${c.owner_name || "Usuario"}</strong>
+//                     <small class="text-muted">${new Date(c.created_at).toLocaleString()}</small>
+//                 </div>
+//                 <div class="mt-1">${(c.content || "").replace(/</g, "&lt;")}</div>
+//             </div>
+//         `).join("");
+
+//     } catch (error) {
+//         console.error(error);
+//         cont.innerHTML = `<p class="text-danger small">Error al cargar comentarios.</p>`;
+//     }
+// }
+
+async function loadComentarios(reviewId, cont) {
+    
+    if (!cont) {
+        //console.warn("No existe el contenedor de comentarios para reviewId", reviewId);
+        return; // salir si no hay contenedor
+    }
+
+    cont.innerHTML = `<p class="text-secondary small">Cargando comentarios...</p>`;
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/comments?reviewId=${reviewId}`);
+        if (!res.ok) {
+            cont.innerHTML = `<p class="text-danger small">No se pudieron obtener los comentarios.</p>`;
+            return;
+        }
+
+        const payload = await res.json();
+        const comments = Array.isArray(payload) ? payload : (payload.data || []);
+
+        if (comments.length === 0) {
+            cont.innerHTML = `<p class="text-secondary small">No hay comentarios aún.</p>`;
+            return;
+        }
+
+        const currentUser = localStorage.getItem("user_id");
+
+        cont.innerHTML = comments.map(c => `
+            <div class="p-2 border rounded mb-2 comment-card" data-id="${c.id}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <strong>${c.owner_name || "Usuario"}</strong>
+                    <div>
+                        <small class="text-muted me-2">${new Date(c.created_at).toLocaleString()}</small>
+                        ${
+                            c.owner == currentUser ? `
+                                <i class="fas fa-edit edit-comment" data-id="${c.id}" style="cursor:pointer; margin-right:8px;"></i>
+                                <i class="fas fa-trash delete-comment" data-id="${c.id}" style="cursor:pointer;"></i>
+                            ` : ""
+                        }
+                    </div>
+                </div>
+                <div class="mt-1">${(c.content || "").replace(/</g, "&lt;")}</div>
+            </div>
+        `).join("");
+
+    } catch (error) {
+        console.error(error);
+        cont.innerHTML = `<p class="text-danger small">Error al cargar comentarios.</p>`;
+    }
+}
+
+
+let commentToEdit = null;
+
+document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("edit-comment")) {
+        const commentId = e.target.dataset.id;
+
+        try {
+            const res = await fetch(`http://localhost:3000/api/comments/${commentId}`, {
+                headers: { "x-auth": localStorage.getItem("user_auth_key") }
+            });
+            if (!res.ok) throw new Error("No se pudo obtener el comentario");
+            const comment = await res.json();
+
+            const userId = localStorage.getItem("user_id");
+            if (comment.owner != userId) {
+                alert("No puedes editar este comentario");
+                return;
+            }
+
+            document.getElementById("editCuerpoComentario").value = comment.content;
+            commentToEdit = commentId;
+
+            const modal = new bootstrap.Modal(document.getElementById("modalEditarComentario"));
+            modal.show();
+
+        } catch (err) {
+            console.error(err);
+            alert("Error al obtener el comentario");
+        }
+    }
+});
+
+
+
 
 async function fetchReviewById(id) {
     try {
@@ -686,6 +1039,141 @@ document.addEventListener("click", async (e) => {
 });
 
         });
+
+
+
+
+    document.getElementById("btnActualizarComentario").addEventListener("click", async () => {
+    const newContent = document.getElementById("editCuerpoComentario").value.trim();
+    if (!newContent) return alert("El comentario no puede estar vacío");
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/comments/${commentToEdit}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth": localStorage.getItem("user_auth_key")
+            },
+            body: JSON.stringify({ content: newContent })
+        });
+
+        if (!res.ok) throw new Error("Error al actualizar comentario");
+
+        bootstrap.Modal.getInstance(document.getElementById("modalEditarComentario")).hide();
+       // loadComentarios(data.review_id, document.getElementById(`comentarios-${data.review_id}`))
+     
+       const commentCard = document.querySelector(`.comment-card[data-id="${commentToEdit}"]`);
+        if (commentCard) {
+            const reviewId = commentCard.closest('.comentarios-container').id.split('-')[1];
+            const cont = document.getElementById(`comentarios-${reviewId}`);
+            loadComentarios(reviewId, cont);
+        }
+
+        commentToEdit = null;
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al actualizar tu comentario");
+    }
+});
+
+
+
+let commentToDelete = null;
+
+// CLICK EN ICONO DE BASURA DE COMENTARIO
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("delete-comment")) {
+        commentToDelete = e.target.dataset.id;
+
+        // Mostrar modal
+        const modal = new bootstrap.Modal(document.getElementById("modalEliminarComentario"));
+        modal.show();
+    }
+});
+
+// CONFIRMAR ELIMINACIÓN DE COMENTARIO
+document.getElementById("confirmDeleteComment").addEventListener("click", async () => {
+    if (!commentToDelete) return;
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/comments/${commentToDelete}`, {
+            method: "DELETE",
+            headers: {
+                "x-auth": localStorage.getItem("user_auth_key")
+            }
+        });
+
+        if (!res.ok) throw new Error("Error al eliminar comentario");
+
+        // Cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById("modalEliminarComentario")).hide();
+
+        // Eliminar de la UI
+        const commentCard = document.querySelector(`.comment-card[data-id="${commentToDelete}"]`);
+        if (commentCard) commentCard.remove();
+
+        commentToDelete = null;
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al eliminar el comentario");
+    }
+});
+
+
+let reviewIdToComment = null; // Guardamos la reseña en la que se está comentando
+
+// Abrir modal para escribir comentario
+document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("escribir-comentario-btn")) {
+        reviewIdToComment = e.target.dataset.id; // Guardamos el ID de la reseña
+        document.getElementById("nuevoComentarioCuerpo").value = ""; // limpiar textarea
+        const modal = new bootstrap.Modal(document.getElementById("modalCrearComentario"));
+        modal.show();
+    }
+});
+
+// Crear comentario
+document.getElementById("btnCrearComentario").addEventListener("click", async () => {
+    const content = document.getElementById("nuevoComentarioCuerpo").value.trim();
+    if (!content) return alert("El comentario no puede estar vacío");
+    if (!reviewIdToComment) return alert("No se pudo determinar la reseña para el comentario");
+
+    try {
+        const res = await fetch("http://localhost:3000/api/comments", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth": localStorage.getItem("user_auth_key")
+            },
+            body: JSON.stringify({
+                id_review: reviewIdToComment,
+                owner: localStorage.getItem("user_id"),
+                content,
+                date: new Date().toISOString()
+            })
+        });
+
+        if (!res.ok) throw new Error("Error al crear comentario");
+
+        // Cerrar modal y limpiar textarea
+        bootstrap.Modal.getInstance(document.getElementById("modalCrearComentario")).hide();
+        document.getElementById("nuevoComentarioCuerpo").value = "";
+
+        // Recargar comentarios de la reseña
+        const cont = document.getElementById(`comentarios-${reviewIdToComment}`);
+        if (cont) loadComentarios(reviewIdToComment, cont);
+
+        reviewIdToComment = null;
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al publicar tu comentario");
+    }
+});
+
+
     </script>
 </body>
 </html>
