@@ -53,6 +53,64 @@
         .modal-content { border: 3px solid var(--blue); border-radius: 12px; }
         .modal-header { background-color: var(--blue); color: white; border-radius: 10px 10px 0 0; }
         .btn-orange { background-color: var(--orange); color: white; border: none; border-radius: 8px; padding: 8px; }
+    
+    
+        /* --- Estilo para las tarjetas de reseñas --- */
+        .review-card {
+            background: #f8f9fa;
+            border: 2px solid var(--blue);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            position: relative;
+            transition: 0.2s ease;
+        }
+
+        .review-card:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Nombre del usuario */
+        .review-user {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--blue);
+        }
+
+        /* Título de la reseña */
+        .review-title {
+            font-weight: 600;
+            color: var(--dark);
+            margin-top: 5px;
+        }
+
+        /* Texto */
+        .review-text {
+            font-size: 0.95rem;
+            margin-top: 5px;
+        }
+
+        /* Contenedor de iconos (editar/borrar) */
+        .review-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        .review-actions i {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 18px;
+            color: var(--blue);
+            transition: 0.2s ease;
+        }
+
+        .review-actions i:hover {
+            color: var(--orange);
+            transform: scale(1.2);
+        }
+
     </style>
 </head>
 
@@ -205,12 +263,66 @@
         </div>
     </div>
 
+    <!-- MODAL EDITAR RESEÑA -->
+<div class="modal fade" id="modalEditarResena" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Editar reseña</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body px-4">
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" id="editTituloResena" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Reseña</label>
+                    <textarea class="form-control" id="editCuerpoResena" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn-orange w-100 fw-bold" id="btnActualizarResena">Actualizar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL ELIMINAR RESEÑA -->
+<div class="modal fade" id="modalEliminarResena" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title fw-bold">
+                    <i class="fas fa-trash me-2"></i>Eliminar reseña
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body text-center">
+                <p class="fw-semibold mb-2">¿Quieres eliminar esta reseña?</p>
+                <p class="text-danger fw-bold">Esta acción no se puede deshacer.</p>
+            </div>
+
+            <div class="modal-footer border-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-danger px-4" id="confirmDeleteReview">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
         const API_KEY = '65f588c6445a775c9a45fed2ecb97ae4';
         const BASE_URL = 'https://api.themoviedb.org/3/movie/';
         const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
+
+
+        
 
         async function loadMovieDetails(movieId) {
             try {
@@ -245,10 +357,224 @@
             }
         }
 
+           
+          async function loadMovieReviews(movieId) {
+            const reviewsContainer = document.querySelector(".reviews");
+
+            // Mantener el título
+            reviewsContainer.innerHTML = `
+                <h4>Reseñas de la comunidad</h4>
+                <p class="text-secondary">Cargando reseñas...</p>
+            `;
+
+            try {
+                // 1. Usar la ruta correcta
+                const response = await fetch(`http://localhost:3000/api/reviews/all`);
+
+                if (!response.ok) throw new Error("No se pudieron obtener las reseñas");
+
+                const allReviews = await response.json();
+
+                // 2. Filtrar por película
+                const movieReviews = allReviews.filter(r => r.movie_id == movieId);
+
+                // 3. Si no hay reseñas, mostrar aviso
+                if (movieReviews.length === 0) {
+                    reviewsContainer.innerHTML = `
+                        <h4>Reseñas de la comunidad</h4>
+                        <p class="text-secondary">No hay reseñas para esta película aún.</p>
+                    `;
+                    return;
+                }
+
+                // 4. Limpiar debajo del título
+                reviewsContainer.innerHTML = `<h4>Reseñas de la comunidad</h4>`;
+
+                // 5. Crear las tarjetas
+                movieReviews.forEach(review => {
+                    const div = document.createElement("div");
+                    div.className = "review-card mt-3";
+
+                    div.innerHTML = `
+                        <div class="review-header">
+                            <span class="review-user">${review.owner_name || "Usuario"}</span>
+
+                            <div class="review-actions">
+                                <i class="fas fa-edit edit-review" data-id="${review.id}"></i>
+                                <i class="fas fa-trash delete-review" data-id="${review.id}"></i>
+                            </div>
+                        </div>
+
+                        <div class="review-title">${review.title}</div>
+                        <div class="review-text">${review.description}</div>
+                    `;
+
+                    reviewsContainer.appendChild(div);
+                });
+
+            } catch (error) {
+                console.error(error);
+                reviewsContainer.innerHTML = `
+                    <h4>Reseñas de la comunidad</h4>
+                    <p class="text-danger">Error al cargar reseñas.</p>
+                `;
+            }
+}
+
+async function fetchReviewById(id) {
+    try {
+        const response = await fetch(`http://localhost:3000/api/reviews/${id}`, {
+            headers: {
+                "x-auth": localStorage.getItem("user_auth_key")
+            }
+        });
+        if (!response.ok) throw new Error("No se pudo obtener la reseña");
+        return await response.json();
+    } catch (err) {
+        console.error(err);
+        alert("Error al obtener la reseña");
+    }
+}
+
+// delete 
+let reviewToDelete = null;
+
+// CLICK EN ICONO DE BASURA
+document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("delete-review")) {
+
+        reviewToDelete = e.target.dataset.id;
+
+        // 1. Obtener reseña
+        const review = await fetchReviewById(reviewToDelete);
+        const userId = localStorage.getItem("user_id");
+
+        // 2. Validar dueño
+        if (review.owner != userId) {
+            alert("No puedes eliminar esta reseña porque no es tuya.");
+            reviewToDelete = null;
+            return;
+        }
+
+        // 3. Mostrar modal
+        const modal = new bootstrap.Modal(document.getElementById("modalEliminarResena"));
+        modal.show();
+    }
+});
+
+
+// CONFIRMAR ELIMINACIÓN
+document.getElementById("confirmDeleteReview").addEventListener("click", async () => {
+
+    if (!reviewToDelete) return;
+
+    try {
+        const res = await fetch(`http://localhost:3000/api/reviews/${reviewToDelete}`, {
+            method: "DELETE",
+            headers: {
+                "x-auth": localStorage.getItem("user_auth_key")
+            }
+        });
+
+        if (!res.ok) {
+            alert("Error al eliminar reseña.");
+            return;
+        }
+
+        // Cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById("modalEliminarResena")).hide();
+
+        // Recargar reseñas
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get("id") || 105;
+        loadMovieReviews(movieId);
+
+        reviewToDelete = null;
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al eliminar tu reseña.");
+    }
+});
+
+
+
+
+
+document.getElementById("btnActualizarResena").addEventListener("click", async () => {
+    const reviewId = document.getElementById("btnActualizarResena").dataset.id;
+    const title = document.getElementById("editTituloResena").value.trim();
+    const description = document.getElementById("editCuerpoResena").value.trim();
+    const rating = 5; // ejemplo
+    const tags = [];
+
+    if (!title || !description) {
+        alert("Completa el título y la reseña.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth": localStorage.getItem("user_auth_key")
+            },
+            body: JSON.stringify({ title, description, rating, tags })
+        });
+
+        if (!response.ok) throw new Error("Error al actualizar reseña");
+
+        bootstrap.Modal.getInstance(document.getElementById("modalEditarResena")).hide();
+
+        // Recargar reseñas
+        const params = new URLSearchParams(window.location.search);
+        const movieId = params.get("id") || 105;
+        loadMovieReviews(movieId);
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al actualizar tu reseña.");
+    }
+});
+
+
+document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("edit-review")) {
+        const reviewId = e.target.dataset.id;
+        const review = await fetchReviewById(reviewId); // función que crearemos
+        const userId = localStorage.getItem("user_id"); // id del usuario logueado
+
+        if (review.owner != userId) {
+            alert("No escribiste esta reseña, no puedes editarla.");
+            return;
+        }
+
+        // Abrir modal con datos
+        const modal = new bootstrap.Modal(document.getElementById("modalEditarResena"));
+        document.getElementById("editTituloResena").value = review.title;
+        document.getElementById("editCuerpoResena").value = review.description;
+        modal.show();
+
+        // Guardar temporalmente el id para actualizar
+        document.getElementById("btnActualizarResena").dataset.id = reviewId;
+    }
+});
+
+
+
         document.addEventListener("DOMContentLoaded", () => {
             const params = new URLSearchParams(window.location.search);
             const id = params.get("id") || 105;
             loadMovieDetails(id);
+            loadMovieReviews(id);
+            
+
+
+           
+
+
+
 
             const logoutBtn = document.getElementById("logoutBtn");
             const logoutModal = new bootstrap.Modal(document.getElementById("modalLogout"));
@@ -313,25 +639,52 @@
                 bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
             });
 
-            document.getElementById("btnPublicarResena").addEventListener("click", () => {
-                const titulo = document.getElementById("tituloResena").value.trim();
-                const cuerpo = document.getElementById("cuerpoResena").value.trim();
-                if (!titulo || !cuerpo) {
-                    alert('Completa título y reseña.');
-                    return;
-                }
+            document.getElementById("btnPublicarResena").addEventListener("click", async () => {
+    const title = document.getElementById("tituloResena").value.trim();
+    const description = document.getElementById("cuerpoResena").value.trim();
+    const rating =  5; // ejemplo
+    const due_date = new Date().toISOString().split("T")[0]; // "2025-11-24"
 
-                const reviews = document.querySelector('.reviews');
-                const div = document.createElement('div');
-                div.className = 'review';
-                div.innerHTML = `<strong>Tú:</strong> <em>${titulo}</em><br>${cuerpo}`;
-                reviews.appendChild(div);
+    if (!title || !description) {
+        alert("Completa el título y la reseña.");
+        return;
+    }
 
-                document.getElementById("tituloResena").value = '';
-                document.getElementById("cuerpoResena").value = '';
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get("id") || 105;
 
-                bootstrap.Modal.getInstance(document.getElementById('modalResena')).hide();
-            });
+    try {
+        const response = await fetch("http://localhost:3000/api/reviews", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth": localStorage.getItem("user_auth_key")
+            },
+            body: JSON.stringify({
+                movie_id: movieId,
+                title,
+                description,
+                due_date,
+                rating,
+                tags: []
+            })
+        });
+
+        if (!response.ok) throw new Error("Error al crear reseña");
+
+        bootstrap.Modal.getInstance(document.getElementById("modalResena")).hide();
+
+        document.getElementById("tituloResena").value = "";
+        document.getElementById("cuerpoResena").value = "";
+
+        loadMovieReviews(movieId);
+
+    } catch (err) {
+        console.error(err);
+        alert("Ocurrió un error al publicar tu reseña.");
+    }
+});
+
         });
     </script>
 </body>

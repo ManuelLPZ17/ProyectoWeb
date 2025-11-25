@@ -155,3 +155,16 @@ exports.getAllReviewsByUser = async (req, res) => {
         res.status(500).send("Error retrieving reviews");
     }
 };
+
+// =======================
+// 6. GET ALL REVIEWS (admin/dev)
+// =======================
+exports.getAllReviews = async (req, res) => {
+    try {
+        const reviews = await ReviewService.getAllReviews();
+        res.json(reviews);
+    } catch (err) {
+        console.error("❌ Error retrieving all reviews:", err);
+        res.status(500).send("Error retrieving all reviews");
+    }
+};

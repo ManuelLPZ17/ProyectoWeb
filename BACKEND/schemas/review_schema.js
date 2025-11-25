@@ -30,6 +30,11 @@ const reviewSchema = new mongoose.Schema({
         required: true
     },
 
+    movie_id: {                // <-- AGREGADO
+        type: Number,
+        required: true
+    },
+
     status: {
         type: String,
         enum: ['A', 'F', 'C'],

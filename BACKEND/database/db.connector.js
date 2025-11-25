@@ -9,7 +9,7 @@ const config = require("../config/config"); // Importa tu archivo de configuraci
 const dbConnect = async () => {
     try {
         await mongoose.connect(config.DB_HOST);
-        console.log("CONECTANDO A:", config.DB_HOST);
+        //console.log("CONECTANDO A:", config.DB_HOST);
 
         console.log("✅ Conexión exitosa a MongoDB Atlas.");
     } catch (error) {

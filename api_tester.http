@@ -110,7 +110,7 @@ Content-Type: application/json
 ## 1. CREAR RESEÑA
 ############################################
 POST {{url}}/api/reviews
-x-auth: Holamundo12345#
+x-auth: {{user1_pass}}
 Content-Type: application/json
 
 {
@@ -135,21 +135,21 @@ x-auth: Holamundo12345#
 ############################################
 ## 3. OBTENER RESEÑA POR ID
 ############################################
-GET {{url}}/api/reviews/2
-x-auth: Holamundo12345#
+GET {{url}}/api/reviews/1
+x-auth: {{user1_pass}}
 
 
 
 ############################################
 ## 4. ACTUALIZAR RESEÑA (PATCH)
 ############################################
-PATCH {{url}}/api/reviews/1
+PATCH {{url}}/api/reviews/2
 x-auth: Holamundo12345#
 Content-Type: application/json
 
 {
-  "title": "Actualizado",
-  "description": "Me gustó más de lo que recordaba",
+  "title": "Esta geniaaal ",
+  "description": "Mesta es una nueva reseña",
   "rating": 10,
   "tags": []
 }
@@ -166,7 +166,8 @@ x-auth: Holamundo12345#
 
 
 
-
+### Obtener TODAS las reseñas (toda la BD)
+GET http://localhost:3000/api/reviews/all
 
 
 
