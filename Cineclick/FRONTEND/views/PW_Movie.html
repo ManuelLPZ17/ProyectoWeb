@@ -1173,7 +1173,33 @@ document.getElementById("btnCrearComentario").addEventListener("click", async ()
     }
 });
 
+import("./../scripts/watchlist.js").then(() => {
+    const heart = document.getElementById("heartIcon");
+    const movieId = new URLSearchParams(window.location.search).get("id");
+
+    async function updateHeartState() {
+        const list = await getUserWatchlist();
+        const exists = list.some(item => item.movie_id == movieId);
+
+        if (exists) heart.classList.add("active");
+        else heart.classList.remove("active");
+    }
+
+    // Inicializar estado
+    updateHeartState();
+
+    // Toggle al hacer clic
+    heart.addEventListener("click", async () => {
+        const ok = await toggleWatchlistFromMovie(movieId);
+        if (ok) updateHeartState();
+    });
+});
+
+
 
     </script>
+
+    <script src="../scripts/watchlist.js"></script>
+
 </body>
 </html>
