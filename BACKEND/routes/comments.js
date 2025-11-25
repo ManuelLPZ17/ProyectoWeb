@@ -11,4 +11,7 @@ router.get('/:id', commentsController.getCommentById);
 router.patch('/:id', authCommentOwnerMiddleware, commentsController.updateComment);
 router.delete('/:id', authCommentOwnerMiddleware, commentsController.deleteComment);
 
+// comments_routes.js
+router.get('/user/:userId', commentsController.getCommentsByUser);
+
 module.exports = router;

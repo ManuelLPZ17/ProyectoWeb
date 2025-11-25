@@ -172,10 +172,9 @@ GET http://localhost:3000/api/reviews/all
 
 
 
-
 ##################### voy a crear un comentario a una reseña
 POST http://localhost:3000/api/comments
-x-auth: Holamundo12345#
+x-auth: Holamundo12345##
 Content-Type: application/json
 
 {

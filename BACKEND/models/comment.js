@@ -1,38 +1,17 @@
 // BACKEND/models/comment.js
+const mongoose = require('mongoose');
 
-let nextCommentId = 1;
-function getNextCommentID() {
-    return nextCommentId++;
-}
+// Definimos el esquema de los comentarios
+const commentSchema = new mongoose.Schema({
+    id_review: { type: Number, required: true },
+    movie_id: { type: Number, required: true },
+    owner: { type: Number, required: true },
+    owner_name: { type: String, required: true },
+    content: { type: String, required: true },
+    created_at: { type: Date, default: Date.now }
+});
 
-class Comment {
-    constructor({ id_review, movie_id, owner, owner_name, content }) {
-        if (!id_review) throw new Error("id_review is required");
-        if (!movie_id) throw new Error("movie_id is required");
-        if (!owner) throw new Error("owner is required");
-        if (!owner_name) throw new Error("owner_name is required");
-        if (!content || content.trim() === "") throw new Error("content cannot be empty");
-
-        this.id = getNextCommentID();
-        this.id_review = id_review;
-        this.movie_id = movie_id;
-        this.owner = owner;
-        this.owner_name = owner_name;
-        this.content = content;
-        this.created_at = new Date().toISOString();
-    }
-
-    toObj() {
-        return {
-            id: this.id,
-            id_review: this.id_review,
-            movie_id: this.movie_id,
-            owner: this.owner,
-            owner_name: this.owner_name,
-            content: this.content,
-            created_at: this.created_at
-        };
-    }
-}
+// Creamos el modelo "Comment" basado en el esquema
+const Comment = mongoose.model('Comment', commentSchema);
 
 module.exports = Comment;
