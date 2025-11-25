@@ -109,7 +109,7 @@ async function renderWatchlist() {
                 </div>
 
                 <div class="review-actions">
-                    <i class="fas fa-trash" onclick="removeFromWatchlistUI('${item.id}')"></i>
+                    <i class="fas fa-trash" onclick="removeFromWatchlistUI('${item._id || item.id}')"></i>
                 </div>
             </div>
         `;
@@ -148,7 +148,8 @@ async function toggleWatchlistFromMovie(movieId) {
         const ok = await addToWatchlist(movieId);
         return ok;
     } else {
-        const ok = await removeFromWatchlist(existing.id);
+        // Usar el identificador correcto de MongoDB (_id) o id
+        const ok = await removeFromWatchlist(existing._id || existing.id);
         return ok;
     }
 }

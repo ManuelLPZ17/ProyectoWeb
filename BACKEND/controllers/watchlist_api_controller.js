@@ -22,15 +22,15 @@ exports.addItemToWatchlist = async (req, res) => {
         const movieData = tmdbRes.data;
 
         // 2️⃣ Armar datos a guardar
-        const data = {
-            id_user: req.user.id,
-            movie_id: movieId,
-            movie_title: movieData.title,
-            movie_poster: movieData.poster_path
-                ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}`
-                : null,
-            status: req.body.status || "pending",
-        };
+            const data = {
+                id_user: Number(req.user.id),
+                movie_id: Number(movieId),
+                movie_title: movieData.title,
+                movie_poster: movieData.poster_path
+                    ? `https://image.tmdb.org/t/p/w500${movieData.poster_path}`
+                    : null,
+                status: req.body.status || "pending",
+            };
 
         // 3️⃣ Guardar
         const newItem = await watchlistService.createItem(data);
@@ -63,8 +63,15 @@ exports.getWatchlist = async (req, res) => {
                     const response = await axios.get(tmdbUrl);
                     const movie = response.data;
 
+                    // Asegura que _id esté presente
                     return {
-                        ...item,
+                        _id: item._id,
+                        id_user: item.id_user,
+                        movie_id: item.movie_id,
+                        movie_title: item.movie_title,
+                        movie_poster: item.movie_poster,
+                        status: item.status,
+                        added_at: item.added_at,
                         movie: {
                             id: movie.id,
                             title: movie.title,
@@ -83,7 +90,16 @@ exports.getWatchlist = async (req, res) => {
                     };
 
                 } catch (e) {
-                    return { ...item, movie: null };
+                    return {
+                        _id: item._id,
+                        id_user: item.id_user,
+                        movie_id: item.movie_id,
+                        movie_title: item.movie_title,
+                        movie_poster: item.movie_poster,
+                        status: item.status,
+                        added_at: item.added_at,
+                        movie: null
+                    };
                 }
             })
         );

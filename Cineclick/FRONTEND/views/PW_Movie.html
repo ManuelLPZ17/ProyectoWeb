@@ -49,7 +49,7 @@
 
         .tags span { display:inline-block; background-color: var(--blue); color:white; padding:5px 10px; border-radius:6px; margin-right:5px; }
         .heart-icon { color: var(--blue); font-size:22px; cursor:pointer; }
-        .heart-icon.active { color: red; }
+        .heart-icon.active { color: var(--blue); }
         .modal-content { border: 3px solid var(--blue); border-radius: 12px; }
         .modal-header { background-color: var(--blue); color: white; border-radius: 10px 10px 0 0; }
         .btn-orange { background-color: var(--orange); color: white; border: none; border-radius: 8px; padding: 8px; }
@@ -250,7 +250,7 @@
                     </div>
                     <div class="tags d-flex align-items-center gap-2 mt-3" id="movie-tags">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#modalCategoria">+</button>
-                        <i class="fas fa-heart heart-icon ms-2" id="heartIcon"></i>
+                        <i class="far fa-heart heart-icon ms-2" id="heartIcon"></i>
                     </div>
                 </div>
             </div>
@@ -1181,8 +1181,15 @@ import("./../scripts/watchlist.js").then(() => {
         const list = await getUserWatchlist();
         const exists = list.some(item => item.movie_id == movieId);
 
-        if (exists) heart.classList.add("active");
-        else heart.classList.remove("active");
+        if (exists) {
+            heart.classList.add("active");
+            heart.classList.remove("far");
+            heart.classList.add("fas");
+        } else {
+            heart.classList.remove("active");
+            heart.classList.remove("fas");
+            heart.classList.add("far");
+        }
     }
 
     // Inicializar estado
