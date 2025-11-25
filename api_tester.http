@@ -128,7 +128,7 @@ Content-Type: application/json
 ## 2. OBTENER TODAS LAS RESEÑAS DEL USUARIO
 ############################################
 GET {{url}}/api/reviews
-x-auth: Holamundo12345#
+x-auth: Pw23456789#
 
 
 

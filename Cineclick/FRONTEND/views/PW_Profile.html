@@ -246,6 +246,83 @@
         background-color: #e56f26;
       }
 
+
+      /* ------------------------------------------- */
+/*     ESTILO PREMIUM PARA REVIEWS DEL PERFIL  */
+/* ------------------------------------------- */
+
+.review-card {
+    background: #ffffff;
+    border: 2px solid var(--blue);
+    border-radius: 14px;
+    padding: 18px;
+    margin-top: 18px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    display: flex;
+    gap: 18px;
+    transition: 0.2s ease;
+}
+
+.review-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+}
+
+/* Poster */
+.review-poster {
+    width: 130px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 3px solid var(--blue);
+}
+
+/* Contenido del texto */
+.review-body {
+    flex-grow: 1;
+}
+
+.review-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 6px;
+}
+
+.review-text {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+}
+
+/* Usuario */
+.review-user {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--blue);
+}
+
+/* Iconos editar / borrar */
+.review-actions {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+}
+
+.review-actions i {
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 10px;
+    color: var(--blue);
+    transition: 0.2s ease;
+}
+
+.review-actions i:hover {
+    color: var(--orange);
+    transform: scale(1.2);
+}
+
+
         </style>
     </head>
 
@@ -342,24 +419,14 @@
             <div class="mt-5 ms-3 d-flex justify-content-center" style="margin-right: 20px; flex-grow: 1; padding-right: 20px;">
                 <div class="text-center" style="border: 3px solid var(--dark); border-radius: 10px; padding: 20px; width: 90%; max-width: 1200px;">
                     <div class="mb-3 d-flex justify-content-between gap-0">
-                        <button class="btn btn-orange w-100" style="border-radius: 10px 0 0 10px;">Reviews</button>
-                        <button class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 0 0 0;">Comments</button>
-                        <button class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 10px 10px 0;">Likes</button>
+                        <button id="btnReviews" class="btn btn-orange w-100" style="border-radius: 10px 0 0 10px;">Reviews</button>
+                        <button id="btnComments" class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 0 0 0;">Comments</button>
+                        <button id="btnLikes" class="btn btn-outline-primary btn-blue-hover w-100" style="border-radius: 0 10px 10px 0;">Likes</button>
                     </div>
 
-                    <div style="text-transform: uppercase; font-weight: bold; color: var(--dark); margin-bottom: 10px;">
-                        THIS MOVIE IS COOL
-                    </div>
-
-                    <div class="d-flex align-items-start" style="font-size: 14px; color: #212529;">
-                        <img src="../assets/TronLegacyPoster.jpeg" alt="Tron Legacy Poster" style="width: 150px; height: auto; margin-right: 20px;">
-                        <div>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris. Integer in mauris eu nibh euismod gravida. Duis ac tellus et risus vulputate vehicula. Donec lobortis risus a elit cursus mollis. Suspendisse potenti. Nulla facilisi.
-                                Vivamus sit amet semper lacus, in mollis libero. Donec sed odio dui. Nulla vitae elit libero, a pharetra augue. Curabitur blandit tempus porttitor. Integer posuere erat a ante venenatis dapibus posuere velit aliquet. Aenean lacinia bibendum nulla sed consectetur.
-                            </p>
-                        </div>
-                    </div>
+                      <!-- AQUÍ SE RENDERIZA TODO -->
+        <div id="reviewsContainer"></div>
+                    
                 </div>
             </div>
 
@@ -468,5 +535,8 @@
             });
     </script>
     
+<script src="../scripts/profile_reviews.js"></script>
+
+
     </body>
 </html>
