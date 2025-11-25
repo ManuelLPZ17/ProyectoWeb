@@ -9,8 +9,8 @@ const routerTags = express.Router();
 // POST /tags: Crea una nueva etiqueta (Requiere autenticación)
 routerTags.post('/', authMiddleware.authRequiredMiddleware, tagsController.createTag);
 
-// GET /tags: Obtener todas las etiquetas del usuario (Requiere autenticación)
-routerTags.get('/', authMiddleware.authRequiredMiddleware, tagsController.getAllTagsByUser);
+// GET /tags: Obtener tags por película (movie_id)
+routerTags.get('/', tagsController.getTagsByMovie);
 
 // DELETE /tags/:id (Requiere autenticación del propietario y validación de integridad)
 routerTags.delete('/:id', authMiddleware.authOwnerMiddleware, tagsController.deleteTag);

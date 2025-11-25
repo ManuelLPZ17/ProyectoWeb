@@ -22,7 +22,8 @@ app.use(
 // ----------------------------------------
 // RUTAS
 // ----------------------------------------
-app.use("/watchlist", require("./routes/watchlist"));  // <-- AHORA SÍ FUNCIONA
+app.use("/watchlist", require("./routes/watchlist"));
+app.use("/tags", require("./routes/tags"));
 
 app.use(routerApi);  // Router principal
 

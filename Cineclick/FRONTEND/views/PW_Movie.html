@@ -249,9 +249,72 @@
                         <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalResena">Crear Reseña</button>
                     </div>
                     <div class="tags d-flex align-items-center gap-2 mt-3" id="movie-tags">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalCategoria">+</button>
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalTag">+</button>
                         <i class="far fa-heart heart-icon ms-2" id="heartIcon"></i>
                     </div>
+                <!-- MODAL CREAR TAG PERSONALIZADO -->
+                <div class="modal fade" id="modalTag" tabindex="-1" aria-labelledby="modalTagLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTagLabel">Crear etiqueta personalizada</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" class="form-control" id="inputTagName" placeholder="Nombre de la etiqueta">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="button" class="btn btn-primary" id="btnCreateTag">Crear</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    <script>
+                        // ...existing code...
+                        import("./../scripts/watchlist.js").then(() => {
+                            const heart = document.getElementById("heartIcon");
+                            const movieId = new URLSearchParams(window.location.search).get("id");
+
+                            async function renderCustomTags() {
+                                const tagsContainer = document.getElementById("movie-tags");
+                                // Elimina tags previos
+                                tagsContainer.querySelectorAll(".custom-tag").forEach(e => e.remove());
+                                const tags = await getTagsByMovie(movieId);
+                                tags.forEach(tag => {
+                                    const span = document.createElement("span");
+                                    span.textContent = tag.name;
+                                    span.className = "custom-tag";
+                                    // Solo el dueño puede eliminar
+                                    if (String(tag.id_user) === String(USER_ID)) {
+                                        const del = document.createElement("i");
+                                        del.className = "fas fa-times ms-1";
+                                        del.style.cursor = "pointer";
+                                        del.onclick = async () => {
+                                            if (confirm("¿Eliminar etiqueta?")) {
+                                                await deleteTag(tag.id);
+                                                renderCustomTags();
+                                            }
+                                        };
+                                        span.appendChild(del);
+                                    }
+                                    tagsContainer.insertBefore(span, tagsContainer.firstChild);
+                                });
+                            }
+
+                            document.getElementById("btnCreateTag").onclick = async () => {
+                                const name = document.getElementById("inputTagName").value.trim();
+                                if (!name) return alert("Escribe un nombre");
+                                await createTagForMovie(movieId, name);
+                                document.getElementById("inputTagName").value = "";
+                                bootstrap.Modal.getInstance(document.getElementById("modalTag")).hide();
+                                renderCustomTags();
+                            };
+
+                            // Render tags personalizados al cargar
+                            renderCustomTags();
+                        });
+                    </script>
                 </div>
             </div>
 

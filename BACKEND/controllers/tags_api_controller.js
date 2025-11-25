@@ -14,9 +14,13 @@ exports.createTag = async (req, res) => {
             return res.status(400).send("Tag name is required.");
         }
 
+        if (!req.body.movie_id) {
+            return res.status(400).send("movie_id is required.");
+        }
         const tag = await TagService.createTag({
             name: req.body.name,
-            id_user: userId
+            id_user: userId,
+            movie_id: req.body.movie_id
         });
 
         res.status(201).send(tag);
@@ -50,17 +54,13 @@ exports.getTagById = async (req, res) => {
 
 
 // ===============================================================
-// 3. LISTAR TODAS LAS ETIQUETAS DEL USUARIO AUTENTICADO
-//    (GET /tags)
-// ===============================================================
-exports.getAllTagsByUser = async (req, res) => {
+// 3. LISTAR TAGS POR PELÍCULA (GET /tags?movie_id=...)
+exports.getTagsByMovie = async (req, res) => {
     try {
-        const userId = req.userId;
-
-        const tags = await TagService.getTagsByUser(userId);
-
+        const movieId = req.query.movie_id;
+        if (!movieId) return res.status(400).send("movie_id is required");
+        const tags = await TagService.getTagsByMovie(movieId);
         res.json(tags);
-
     } catch (err) {
         console.error("❌ Error retrieving tags:", err);
         res.status(500).send("Error retrieving tags.");

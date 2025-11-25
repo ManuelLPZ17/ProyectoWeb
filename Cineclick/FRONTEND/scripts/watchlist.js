@@ -1,4 +1,51 @@
 // ======================================================
+// TAGS PERSONALIZADOS POR PELÍCULA
+// ======================================================
+async function getTagsByMovie(movieId) {
+    try {
+        const res = await fetch(`${API_URL}/tags?movie_id=${movieId}`);
+        if (!res.ok) return [];
+        return await res.json();
+    } catch (err) {
+        console.error("Error obteniendo tags:", err);
+        return [];
+    }
+}
+
+async function createTagForMovie(movieId, name) {
+    try {
+        const res = await fetch(`${API_URL}/tags`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-auth": AUTH_KEY
+            },
+            body: JSON.stringify({ name, movie_id: movieId })
+        });
+        if (!res.ok) {
+            const error = await res.text();
+            throw new Error(error);
+        }
+        return await res.json();
+    } catch (err) {
+        alert("Error al crear tag: " + err.message);
+        return null;
+    }
+}
+
+async function deleteTag(tagId) {
+    try {
+        const res = await fetch(`${API_URL}/tags/${tagId}`, {
+            method: "DELETE",
+            headers: { "x-auth": AUTH_KEY }
+        });
+        return res.ok;
+    } catch (err) {
+        alert("Error al eliminar tag");
+        return false;
+    }
+}
+// ======================================================
 // WATCHLIST.JS — Manejo completo del Watchlist real
 // Usa "user_auth_key" como token oficial
 // ======================================================

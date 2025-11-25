@@ -17,13 +17,12 @@ module.exports = {
     // =============================================
     async createTag(data) {
         const nextId = await getNextTagId();
-
         const tag = new TagModel({
             id: nextId,
             name: data.name,
-            id_user: data.id_user
+            id_user: data.id_user,
+            movie_id: data.movie_id
         });
-
         return await tag.save();
     },
 
@@ -46,6 +45,11 @@ module.exports = {
     // =============================================
     async getTagsByUser(id_user) {
         return await TagModel.find({ id_user: parseInt(id_user) });
+    },
+
+    // Obtener tags por película
+    async getTagsByMovie(movie_id) {
+        return await TagModel.find({ movie_id: parseInt(movie_id) });
     },
 
     // =============================================

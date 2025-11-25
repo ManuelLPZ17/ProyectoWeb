@@ -10,14 +10,20 @@ exports.authOwnerMiddleware = async (req, res, next) => {
     
     // El ID del recurso a acceder/modificar puede venir de req.params.id (GET/DELETE) 
     // o de req.body.owner/id_user (POST/PATCH). Usamos req.params.id para simplificar la búsqueda.
-    const userIdToAccess = parseInt(req.params.id); 
+        const resourceId = req.params.id;
 
     if (!authHeader) {
         return res.status(401).send("Unauthorized: Authentication header 'x-auth' required.");
     }
     
-    // Buscar al usuario cuyo ID está siendo consultado/modificado
-    const user = await UserService.getUserById(userIdToAccess);
+        // Buscar el tag por id y obtener el id_user dueño
+        const TagModel = require('../schemas/tag_schema');
+        const tag = await TagModel.findOne({ id: parseInt(resourceId) });
+        if (!tag) {
+            return res.status(404).send("Tag not found.");
+        }
+        // Buscar al usuario dueño del tag
+        const user = await UserService.getUserById(tag.id_user);
 
     if (!user) {
         return res.status(404).send("User not found.");
