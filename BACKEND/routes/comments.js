@@ -1,24 +1,14 @@
-// BACKEND/routes/comments.js
 const express = require('express');
+const router = express.Router();
+
 const commentsController = require('../controllers/comments_api_controller');
-const authMiddleware = require('../middlewares/authMiddleware');
+const auth = require('../middlewares/authMiddleware');
 const { authCommentOwnerMiddleware } = require('../middlewares/authCommentOwner');
 
-const routerComments = express.Router();
+router.post('/', auth.authRequiredMiddleware, commentsController.createComment);
+router.get('/', commentsController.getCommentsByReviewId);
+router.get('/:id', commentsController.getCommentById);
+router.patch('/:id', authCommentOwnerMiddleware, commentsController.updateComment);
+router.delete('/:id', authCommentOwnerMiddleware, commentsController.deleteComment);
 
-// POST /comments: Crear un nuevo comentario (Requiere autenticación)
-routerComments.post('/', authMiddleware.authRequiredMiddleware, commentsController.createComment);
-
-// GET /comments?reviewId=X
-routerComments.get('/', commentsController.getCommentsByReviewId);
-
-// DELETE /comments/:id
-routerComments.delete('/:id', authCommentOwnerMiddleware, commentsController.deleteComment);
-
-// PATCH /comments/:id
-routerComments.patch('/:id', authCommentOwnerMiddleware, commentsController.updateComment);
-
-// GET /comments/:id
-routerComments.get('/:id', commentsController.getCommentById);
-
-module.exports = routerComments;
+module.exports = router;

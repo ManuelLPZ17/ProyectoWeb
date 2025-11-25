@@ -1,10 +1,9 @@
 // BACKEND/services/comments_service.js
 
-// SIMULACIÓN DE DATOS
 const CommentMongooseModel = require('../schemas/comments_schema');
 
-exports.saveComment = async (commentJS) => {
-    const newComment = new CommentMongooseModel(commentJS.toObj());
+exports.saveComment = async (commentObj) => {
+    const newComment = new CommentMongooseModel(commentObj);
     return newComment.save();
 };
 
@@ -13,17 +12,17 @@ exports.findCommentsByReviewId = async (reviewId) => {
 };
 
 exports.getCommentById = async (id) => {
-    return CommentMongooseModel.findOne({ id: parseInt(id) }).exec();
+    return CommentMongooseModel.findOne({ id }).exec();
 };
 
 exports.updateComment = async (id, updateData) => {
     return CommentMongooseModel.findOneAndUpdate(
-        { id: parseInt(id) },
+        { id },
         updateData,
-        { new: true } // devuelve el actualizado
+        { new: true }
     ).exec();
 };
 
 exports.deleteComment = async (id) => {
-    return CommentMongooseModel.findOneAndDelete({ id: parseInt(id) }).exec();
+    return CommentMongooseModel.findOneAndDelete({ id }).exec();
 };

@@ -110,14 +110,14 @@ Content-Type: application/json
 ## 1. CREAR RESEÑA
 ############################################
 POST {{url}}/api/reviews
-x-auth: {{user1_pass}}
+x-auth: Holamundo12345#
 Content-Type: application/json
 
 {
-  "title": "Muy buena",
+  "title": "PeliCULON",
   "description": "Me encantó",
   "due_date": "2025-11-24",
-  "movie_id": 105,
+  "movie_id": 100,
   "rating": 9,
   "tags": []
 }
@@ -128,7 +128,7 @@ Content-Type: application/json
 ## 2. OBTENER TODAS LAS RESEÑAS DEL USUARIO
 ############################################
 GET {{url}}/api/reviews
-x-auth: Pw23456789#
+x-auth: Holamundo12345#
 
 
 
@@ -173,9 +173,36 @@ GET http://localhost:3000/api/reviews/all
 
 
 
+##################### voy a crear un comentario a una reseña
+POST http://localhost:3000/api/comments
+x-auth: Holamundo12345#
+Content-Type: application/json
+
+{
+  "id_review": 11,
+  "content": "Muy buena reseña!"
+}
+
+### obtener comentarios por reseña
+GET http://localhost:3000/api/comments?reviewId=11
+
+
+### editar comentarios
+
+PATCH http://localhost:3000/api/comments/2
+x-auth: Holamundo12345#
+Content-Type: application/json
+
+{
+  "content": "Editado22222!"
+}
 
 
 
+
+### eliminar comentario
+DELETE http://localhost:3000/api/comments/1
+x-auth: Holamundo12345#
 
 
 
@@ -226,7 +253,7 @@ x-auth: {{user1_pass}}
 # NOTA: Crea una dependencia de integridad crítica con la Reseña 1.
 # Esperado: 201 Created.
 POST {{url}}/comments
-x-auth: {{user2_pass}}
+x-auth: Holamundo12345#
 Content-Type: application/json
 
 {

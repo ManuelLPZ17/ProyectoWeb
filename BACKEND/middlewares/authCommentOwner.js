@@ -1,33 +1,21 @@
+// BACKEND/middlewares/authCommentOwner.js
+
 const CommentService = require('../services/comments_service');
 const UserService = require('../services/users_service');
 
 exports.authCommentOwnerMiddleware = async (req, res, next) => {
-    const authHeader = req.headers['x-auth'];
-    const commentId = parseInt(req.params.id);
+    const auth = req.headers["x-auth"];
+    const id = parseInt(req.params.id);
 
-    if (!authHeader) {
-        return res.status(401).send("Unauthorized: x-auth header is required.");
+    const comment = await CommentService.getCommentById(id);
+    if (!comment) return res.status(404).send("Comment not found");
+
+    const userOwner = await UserService.getUserById(comment.owner);
+
+    if (userOwner.password !== auth) {
+        return res.status(403).send("Forbidden: You are not the owner");
     }
 
-    // Obtener el comentario
-    const comment = await CommentService.getCommentById(commentId);
-
-    if (!comment) {
-        return res.status(404).send("Comment not found.");
-    }
-
-    // Obtener el dueño REAL del comment
-    const userOwner = await UserService.getUserById(comment.id_user);
-
-    if (!userOwner) {
-        return res.status(500).send("Corrupted data: User owner not found.");
-    }
-
-    // Validar contraseña del dueño REAL
-    if (userOwner.password !== authHeader) {
-        return res.status(401).send("Unauthorized: You are not the owner of this comment.");
-    }
-
-    req.userId = userOwner.id; // Por si el controlador lo necesita
+    req.userId = userOwner.id;
     next();
 };
