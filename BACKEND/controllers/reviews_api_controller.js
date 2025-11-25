@@ -7,10 +7,16 @@ const TagService = require('../services/tags_service');
 exports.createReview = async (req, res) => {
     try {
         const owner = req.userId;  // viene del token
-        const { title, description, due_date, tags = [], rating } = req.body;
+        const { title, description, due_date, tags = [], rating, movie_id } = req.body;
 
-        if (!title || !due_date || rating === undefined) {
-            return res.status(400).send("title, due_date and rating are required");
+        // 🔥 movie_id ahora es OBLIGATORIO
+        if (!title || !due_date || rating === undefined || movie_id === undefined) {
+            return res.status(400).send("title, due_date, rating and movie_id are required");
+        }
+
+        // Validar que movie_id sea número positivo
+        if (!Number.isInteger(Number(movie_id)) || Number(movie_id) <= 0) {
+            return res.status(400).send("movie_id must be a positive integer (TMDb movie ID)");
         }
 
         // Validar tags (si vienen)
@@ -26,6 +32,7 @@ exports.createReview = async (req, res) => {
             description,
             due_date,
             owner,
+            movie_id,   // <-- 🔥 Se envía al servicio
             tags,
             rating
         });
@@ -78,6 +85,13 @@ exports.updateReview = async (req, res) => {
                 if (!tag) {
                     return res.status(400).send(`Tag ${tagId} does not exist`);
                 }
+            }
+        }
+
+        // 🔥 Validación movie_id si viene en update
+        if (updateFields.movie_id !== undefined) {
+            if (!Number.isInteger(Number(updateFields.movie_id)) || Number(updateFields.movie_id) <= 0) {
+                return res.status(400).send("movie_id must be a positive integer (TMDb movie ID)");
             }
         }
 

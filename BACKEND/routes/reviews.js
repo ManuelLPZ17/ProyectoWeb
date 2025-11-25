@@ -24,7 +24,10 @@ routerReviews.get('/', reviewsController.getAllReviewsByUser);
 
 /* ---------- MIDDLEWARE DE PROPIETARIO PARA RUTAS CON :id ---------- */
 // Este middleware valida que LA RESEÑA pertenezca al usuario autenticado
-routerReviews.use('/:id', authMiddleware.authOwnerMiddleware);
+const { authReviewOwnerMiddleware } = require('../middlewares/authReviewOwner');
+routerReviews.use('/:id', authReviewOwnerMiddleware);
+
+
 
 /* ---------- 3. GET /reviews/:id ---------- */
 routerReviews.get('/:id', reviewsController.getReviewById);

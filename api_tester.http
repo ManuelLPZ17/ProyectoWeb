@@ -5,6 +5,8 @@
 @url = http://127.0.0.1:3000
 @admin_auth = admin_auth_key_secreta
 @user1_pass = Pw12345678#
+
+
 @user2_pass = Pw23456789#
 @user1_id = 1 
 @user2_id = 2 
@@ -37,10 +39,24 @@ POST {{url}}/users
 Content-Type: application/json
 
 {
-    "name": "Usuario Secundario",
-    "email": "secundario@cineclick.com",
+    "name": "Usuario tres mil",
+    "email": "user3mil@cineclick.com",
     "password": "{{user2_pass}}",
     "confirm_password": "{{user2_pass}}"
+}
+
+
+### 1.2: REGISTRAR Usuario 100 (ID 2) - Para pruebas de propiedad
+# Esperado: 201 Created.
+# usuario de manuel
+POST {{url}}/users
+Content-Type: application/json
+
+{
+    "name": "Manuel",
+    "email": "manuel@cineclick.com",
+    "password": "Holamundo12345#",
+    "confirm_password": "Holamundo12345#"
 }
 
 
@@ -83,6 +99,117 @@ Content-Type: application/json
     "tags": [{{tag_id}}],
     "rating": 8
 }
+
+
+# M A N U E L
+### 3.1: CREAR RESEÑA (POST /reviews) - ID 1
+# NOTA: Crea la dependencia entre Tag 1 y Usuario 1.
+# Esperado: 201 Created.
+
+############################################
+## 1. CREAR RESEÑA
+############################################
+POST {{url}}/api/reviews
+x-auth: Holamundo12345#
+Content-Type: application/json
+
+{
+  "title": "Muy buena",
+  "description": "Me encantó",
+  "due_date": "2025-11-24",
+  "movie_id": 105,
+  "rating": 9,
+  "tags": []
+}
+
+
+
+############################################
+## 2. OBTENER TODAS LAS RESEÑAS DEL USUARIO
+############################################
+GET {{url}}/api/reviews
+x-auth: Holamundo12345#
+
+
+
+############################################
+## 3. OBTENER RESEÑA POR ID
+############################################
+GET {{url}}/api/reviews/2
+x-auth: Holamundo12345#
+
+
+
+############################################
+## 4. ACTUALIZAR RESEÑA (PATCH)
+############################################
+PATCH {{url}}/api/reviews/1
+x-auth: Holamundo12345#
+Content-Type: application/json
+
+{
+  "title": "Actualizado",
+  "description": "Me gustó más de lo que recordaba",
+  "rating": 10,
+  "tags": []
+}
+
+
+
+############################################
+## 5. ELIMINAR RESEÑA POR ID
+############################################
+DELETE {{url}}/api/reviews/2
+x-auth: Holamundo12345#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ### 3.2: CONSULTA INDIVIDUAL RESEÑA (GET /reviews/1)
 # Esperado: 200 OK.
