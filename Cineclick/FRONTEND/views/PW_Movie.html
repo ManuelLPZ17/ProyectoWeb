@@ -254,6 +254,9 @@
                         <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalCalificar">Calificar</button>
                         <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalResena">Crear Reseña</button>
                     </div>
+                    <div class="mt-2">
+                        <span id="avg-rating-stars">Sin calificaciones</span>
+                    </div>
                     <div class="tags d-flex align-items-center gap-2 mt-3" id="movie-tags">
                         <button type="button" data-bs-toggle="modal" data-bs-target="#modalTag">+</button>
                         <i class="far fa-heart heart-icon ms-2" id="heartIcon"></i>
@@ -1277,6 +1280,54 @@ import("./../scripts/watchlist.js").then(() => {
     </script>
 
     <script src="../scripts/watchlist.js"></script>
+
+<script>
+function getLocalRatings(movieId) {
+    // Obtiene array de ratings guardados en localStorage
+    const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
+    return ratings[movieId] ? [ratings[movieId]] : [];
+}
+
+function setLocalRating(movieId, value) {
+    const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
+    ratings[movieId] = value;
+    localStorage.setItem('movie_ratings', JSON.stringify(ratings));
+}
+
+function renderAvgRating(movieId) {
+    const ratings = getLocalRatings(movieId);
+    let html = '';
+    if (ratings.length) {
+        const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
+        const rounded = Math.round(avg);
+        for (let i = 1; i <= 10; i++) {
+            html += `<i class='fas fa-star${i <= rounded ? " text-warning" : " text-secondary"}'></i>`;
+        }
+        html += ` <span class='ms-1 text-dark'>${avg.toFixed(1)}/10</span>`;
+    } else {
+        html = '<span class="text-secondary">Sin calificaciones</span>';
+    }
+    document.getElementById('avg-rating-stars').innerHTML = html;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const movieId = params.get('id') || '105';
+    renderAvgRating(movieId);
+
+    document.getElementById('submitRatingBtn').addEventListener('click', () => {
+        const val = parseInt(document.getElementById('selectedRating').value, 10) || 0;
+        if (!val) {
+            alert('Selecciona una calificación.');
+            return;
+        }
+        setLocalRating(movieId, val);
+        renderAvgRating(movieId);
+        bootstrap.Modal.getInstance(document.getElementById('modalCalificar')).hide();
+        alert('¡Calificación guardada localmente!');
+    });
+});
+</script>
 
 </body>
 </html>

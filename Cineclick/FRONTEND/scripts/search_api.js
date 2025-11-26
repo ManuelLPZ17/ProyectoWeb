@@ -18,11 +18,14 @@ let activeGenreIds = [];
 
 // Función para generar el HTML de un cartel de película (similar al de Home)
 function createMovieCard(movie) {
-    // Escalar la calificación de TMDb (0-10) a 5 estrellas
-    const rating = movie.vote_average ? Math.round(movie.vote_average / 2) : 0; 
+    // Mostrar solo el promedio local si existe, si no 'Sin calificaciones'
+    const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
+    const avg = ratings[movie.id];
     let starsHtml = '';
-    for (let i = 1; i <= 5; i++) {
-        starsHtml += `<i class="fas fa-star ${i <= rating ? 'active' : ''} text-warning"></i>`;
+    if (avg) {
+        starsHtml = `<span class='ms-1 text-dark'>${avg.toFixed(1)}/10</span>`;
+    } else {
+        starsHtml = '<span class="text-secondary">Sin calificaciones</span>';
     }
     
     const posterUrl = movie.poster_path ? `${IMAGE_BASE_URL}${movie.poster_path}` : 'https://via.placeholder.com/200x300?text=No+Poster';
