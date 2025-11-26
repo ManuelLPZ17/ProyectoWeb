@@ -172,9 +172,10 @@ GET http://localhost:3000/api/reviews/all
 
 
 
+
 ##################### voy a crear un comentario a una reseña
 POST http://localhost:3000/api/comments
-x-auth: Holamundo12345##
+x-auth: Holamundo12345#
 Content-Type: application/json
 
 {
@@ -183,24 +184,30 @@ Content-Type: application/json
 }
 
 ### obtener comentarios por reseña
-GET http://localhost:3000/api/comments?reviewId=11
+GET http://localhost:3000/api/comments?reviewId=10
+
+
+
+### todos los comentarios del user id 7
+GET http://localhost:3000/api/comments/by-user?userId=7
+
 
 
 ### editar comentarios
 
-PATCH http://localhost:3000/api/comments/2
+PATCH http://localhost:3000/api/comments/8
 x-auth: Holamundo12345#
 Content-Type: application/json
 
 {
-  "content": "Editado22222!"
+  "content": "yo pienso que no lo encontraron"
 }
 
 
 
 
 ### eliminar comentario
-DELETE http://localhost:3000/api/comments/4
+DELETE http://localhost:3000/api/comments/1
 x-auth: Holamundo12345#
 
 

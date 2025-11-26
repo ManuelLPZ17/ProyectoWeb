@@ -2,6 +2,14 @@
 
 const CommentMongooseModel = require('../schemas/comments_schema');
 
+
+const Comment = require('../models/comment');
+
+exports.getCommentsByUser = async (userId) => {
+    return await Comment.find({ userId: userId }).sort({ createdAt: -1 }); // opcional: ordenar por fecha
+};
+
+
 exports.saveComment = async (commentObj) => {
     const newComment = new CommentMongooseModel(commentObj);
     return newComment.save();

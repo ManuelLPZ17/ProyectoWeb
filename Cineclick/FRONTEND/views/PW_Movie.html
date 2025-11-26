@@ -1191,7 +1191,7 @@ let reviewIdToComment = null; // Guardamos la reseña en la que se está comenta
 document.addEventListener("click", (e) => {
     if (e.target.classList.contains("escribir-comentario-btn")) {
         reviewIdToComment = e.target.dataset.id; // Guardamos el ID de la reseña
-        document.getElementById("nuevoComentarioCuerpo").value = ""; // limpiar textarea
+        //document.getElementById("nuevoComentarioCuerpo").value = ""; // limpiar textarea
         const modal = new bootstrap.Modal(document.getElementById("modalCrearComentario"));
         modal.show();
     }
