@@ -17,6 +17,7 @@ function toggleForms() {
 }
 
 function handleSuccess(userId, authKey) {
+  localStorage.clear(); // Limpiar todo antes de guardar nuevos datos
   localStorage.setItem('user_id', userId);
   localStorage.setItem('user_auth_key', authKey);
   window.location.href = '/Cineclick/FRONTEND/views/PW_Home.html';

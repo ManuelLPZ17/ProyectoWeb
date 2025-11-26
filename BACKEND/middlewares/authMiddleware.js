@@ -7,15 +7,26 @@ const config = require('../config/config');
 // Verifica que la contraseña del 'x-auth' coincida con la del dueño del recurso.
 exports.authOwnerMiddleware = async (req, res, next) => {
     const authHeader = req.headers['x-auth'];
-    
-    // El ID del recurso a acceder/modificar puede venir de req.params.id (GET/DELETE) 
-    // o de req.body.owner/id_user (POST/PATCH). Usamos req.params.id para simplificar la búsqueda.
-        const resourceId = req.params.id;
+    const resourceId = req.params.id;
 
     if (!authHeader) {
         return res.status(401).send("Unauthorized: Authentication header 'x-auth' required.");
     }
-    
+
+    // Detecta el recurso según la ruta
+    if (req.baseUrl.includes('/users')) {
+        // Buscar usuario por id
+        const user = await UserService.getUserById(resourceId);
+        if (!user) {
+            return res.status(404).send("User not found.");
+        }
+        // Validar contraseña
+        if (user.password !== authHeader) {
+            return res.status(401).send("Unauthorized: Invalid password for this user.");
+        }
+        req.userId = user.id;
+        next();
+    } else if (req.baseUrl.includes('/tags')) {
         // Buscar el tag por id y obtener el id_user dueño
         const TagModel = require('../schemas/tag_schema');
         const tag = await TagModel.findOne({ id: parseInt(resourceId) });
@@ -24,18 +35,19 @@ exports.authOwnerMiddleware = async (req, res, next) => {
         }
         // Buscar al usuario dueño del tag
         const user = await UserService.getUserById(tag.id_user);
-
-    if (!user) {
-        return res.status(404).send("User not found.");
+        if (!user) {
+            return res.status(404).send("User not found.");
+        }
+        // Validar contraseña
+        if (user.password !== authHeader) {
+            return res.status(401).send("Unauthorized: Invalid password for this user.");
+        }
+        req.userId = user.id;
+        next();
+    } else {
+        // Si el recurso no es users ni tags, rechaza
+        return res.status(400).send("Invalid resource for owner authentication.");
     }
-
-    // Validar Contraseña
-    if (user.password !== authHeader) {
-        return res.status(401).send("Unauthorized: Invalid password for this user.");
-    }
-
-    req.userId = user.id; // Adjuntamos el ID del usuario al request para el controlador
-    next();
 };
 
 // Middleware 2: Autenticación de Acceso General (Para /home.html, /tasks.html)
