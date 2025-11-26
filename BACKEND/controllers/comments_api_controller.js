@@ -1,26 +1,9 @@
 // BACKEND/controllers/comments_api_controller.js
 
 const Comment = require('../models/comment');
-//const CommentService = require('../services/comments_service');
+const CommentService = require('../services/comments_service');
 const ReviewService = require('../services/reviews_service');
 const UserService = require('../services/users_service');
-
-
-
-// exports.getCommentsByUser = async (req, res) => {
-//     try {
-//         const userId = req.query.userId;
-//         if (!userId) {
-//             return res.status(400).json({ message: "Se requiere el userId" });
-//         }
-
-//         const comments = await CommentService.getCommentsByUser(userId);
-//         res.status(200).json(comments);
-//     } catch (error) {
-//         console.error("Error retrieving comments by user:", error);
-//         res.status(500).json({ message: "Error interno del servidor" });
-//     }
-// };
 
 // CREATE COMMENT
 exports.createComment = async (req, res) => {
@@ -118,4 +101,3 @@ exports.deleteComment = async (req, res) => {
         res.status(500).send("Error deleting comment.");
     }
 };
-
