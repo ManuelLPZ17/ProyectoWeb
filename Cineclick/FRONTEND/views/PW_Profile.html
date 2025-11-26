@@ -535,7 +535,8 @@
 
                 // Redirigir al login al confirmar
                 confirmLogout.addEventListener("click", () => {
-                window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
+                    localStorage.clear(); // Limpiar localStorage al cerrar sesión
+                    window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
                 });
             });
     </script>

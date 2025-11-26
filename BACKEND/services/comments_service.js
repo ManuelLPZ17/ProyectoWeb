@@ -11,6 +11,10 @@ exports.findCommentsByReviewId = async (reviewId) => {
     return CommentMongooseModel.find({ id_review: reviewId }).exec();
 };
 
+exports.findCommentsByUserId = async (userId) => {
+    return CommentMongooseModel.find({ owner: userId }).exec();
+};
+
 exports.getCommentById = async (id) => {
     return CommentMongooseModel.findOne({ id }).exec();
 };

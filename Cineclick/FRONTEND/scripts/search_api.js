@@ -147,9 +147,10 @@ document.addEventListener("DOMContentLoaded", () => {
         logoutBtn.addEventListener("click", () => logoutModal.show());
 
         if (confirmLogout) {
-            confirmLogout.addEventListener("click", () => {
-                window.location.href = "PW_login.html";
-            });
+                confirmLogout.addEventListener("click", () => {
+                    localStorage.clear();
+                    window.location.href = "PW_login.html";
+                });
         }
     }
     

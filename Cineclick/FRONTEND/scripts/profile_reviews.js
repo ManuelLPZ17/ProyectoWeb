@@ -57,12 +57,41 @@ async function displayReviews(reviews) {
                 <div class="review-title">${review.title}</div>
                 <p class="review-text">${review.description}</p>
             </div>
+            <div class="review-actions">
+                <i class="fas fa-edit" title="Editar" data-id="${review.id}"></i>
+                <i class="fas fa-trash" title="Eliminar" data-id="${review.id}"></i>
+            </div>
         `;
 
         card.addEventListener("click", () => {
             window.location.href = `PW_Movie.html?id=${review.movie_id}`;
         });
 
+        // Eliminar reseña
+        card.querySelector('.fa-trash').addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm('¿Seguro que quieres eliminar esta reseña?')) {
+                try {
+                    const res = await fetch(`http://127.0.0.1:3000/api/reviews/${review.id}`, {
+                        method: 'DELETE',
+                        headers: { 'x-auth': token }
+                    });
+                    if (res.ok) {
+                        loadUserReviews();
+                    } else {
+                        const errorText = await res.text();
+                        if (errorText.includes('assigned comments')) {
+                            alert('No puedes borrar una reseña que tiene comentarios. Elimina los comentarios primero.');
+                        } else {
+                            alert('Error al eliminar reseña: ' + errorText);
+                        }
+                    }
+                } catch (err) {
+                    alert('Error de conexión');
+                }
+            }
+        });
+        // ...puedes agregar lógica de edición aquí...
         reviewsContainer.appendChild(card);
     }
 }
@@ -120,13 +149,34 @@ async function displayComments(comments) {
                 <p class="review-text">${comment.content}</p>
                 <p class="review-user">En reseña ID: ${comment.id_review}</p>
             </div>
+            <div class="review-actions">
+                <i class="fas fa-trash" title="Eliminar" data-id="${comment.id}"></i>
+            </div>
         `;
 
-        // Al hacer click en el contenedor, ir a la página de la película
         card.addEventListener("click", () => {
             window.location.href = `PW_Movie.html?id=${comment.movie_id}`;
         });
 
+        // Eliminar comentario
+        card.querySelector('.fa-trash').addEventListener('click', async (e) => {
+            e.stopPropagation();
+            if (confirm('¿Seguro que quieres eliminar este comentario?')) {
+                try {
+                    const res = await fetch(`http://127.0.0.1:3000/api/comments/${comment.id}`, {
+                        method: 'DELETE',
+                        headers: { 'x-auth': token }
+                    });
+                    if (res.ok) {
+                        btnComments.click();
+                    } else {
+                        alert('Error al eliminar comentario');
+                    }
+                } catch (err) {
+                    alert('Error de conexión');
+                }
+            }
+        });
         commentsContainer.appendChild(card);
     }
 }

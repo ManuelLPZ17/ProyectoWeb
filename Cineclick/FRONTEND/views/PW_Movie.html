@@ -996,9 +996,10 @@ document.addEventListener("click", async (e) => {
             const logoutModal = new bootstrap.Modal(document.getElementById("modalLogout"));
             logoutBtn.addEventListener("click", () => logoutModal.show());
 
-            document.getElementById("confirmLogout").addEventListener("click", () => {
-                window.location.href = "PW_login.html";
-            });
+                document.getElementById("confirmLogout").addEventListener("click", () => {
+                    localStorage.clear();
+                    window.location.href = "PW_login.html";
+                });
 
             const heartIcon = document.getElementById("heartIcon");
             heartIcon.addEventListener("click", () => {

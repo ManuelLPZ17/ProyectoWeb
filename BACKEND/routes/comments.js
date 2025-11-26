@@ -7,6 +7,7 @@ const { authCommentOwnerMiddleware } = require('../middlewares/authCommentOwner'
 
 router.post('/', auth.authRequiredMiddleware, commentsController.createComment);
 router.get('/', commentsController.getCommentsByReviewId);
+router.get('/user/:id', commentsController.getCommentsByUserId);
 router.get('/:id', commentsController.getCommentById);
 router.patch('/:id', authCommentOwnerMiddleware, commentsController.updateComment);
 router.delete('/:id', authCommentOwnerMiddleware, commentsController.deleteComment);

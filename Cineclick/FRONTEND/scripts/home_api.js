@@ -87,6 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (confirmLogout) {
             confirmLogout.addEventListener("click", () => {
+                localStorage.clear();
                 window.location.href = "PW_login.html";
             });
         }

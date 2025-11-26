@@ -324,9 +324,10 @@
                 });
 
                 // Redirigir al login al confirmar
-                confirmLogout.addEventListener("click", () => {
-                window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
-                });
+                    confirmLogout.addEventListener("click", () => {
+                        localStorage.clear();
+                        window.location.href = "PW_login.html"; // cambia el nombre si tu login es otro
+                    });
             });
     </script>
 </body>

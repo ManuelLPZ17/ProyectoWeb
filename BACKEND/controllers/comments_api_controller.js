@@ -59,6 +59,20 @@ exports.getCommentsByReviewId = async (req, res) => {
 };
 
 
+// GET comments by user
+exports.getCommentsByUserId = async (req, res) => {
+    try {
+        const userId = parseInt(req.params.id);
+        if (isNaN(userId)) return res.status(400).send("Invalid user id");
+
+        const comments = await CommentService.findCommentsByUserId(userId);
+        res.json(comments);
+    } catch (err) {
+        res.status(500).send("Error retrieving user's comments.");
+    }
+};
+
+
 // GET comment by id
 exports.getCommentById = async (req, res) => {
     try {
