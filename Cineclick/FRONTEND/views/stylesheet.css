@@ -1,0 +1,39 @@
+.sidebar {
+    width: 80px;
+    background-color: var(--dark);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 15px;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.main-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin-left: 80px;
+    width: calc(100% - 80px);
+}
+
+.top-navbar {
+    background-color: var(--dark);
+    padding: 20px 18px;
+    position: fixed;
+    top: 0;
+    left: 80px;
+    width: calc(100% - 80px);
+    z-index: 1000;
+}
+.pagina {
+    font-size: 1.2rem;       /* Tamaño moderado */
+    text-align: center;      /* Centrado */
+    font-weight: bold;       /* Negrita */
+    color: #ffffff;          /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente legible */
+    margin: 10px 0;          /* Espaciado opcional */
+}

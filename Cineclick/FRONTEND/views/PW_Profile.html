@@ -321,6 +321,15 @@
     color: var(--orange);
     transform: scale(1.2);
 }
+.pagina {
+    font-size: 1.2rem;       /* Tamaño moderado */
+    text-align: center;      /* Centrado */
+    font-weight: bold;       /* Negrita */
+    color: #ffffff;          /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente legible */
+    margin: 10px 0;          /* Espaciado opcional */
+}
+ 
 
 
 
@@ -365,12 +374,8 @@
         <div class="main-container">
             <nav class="navbar navbar-dark top-navbar">
                 <div class="container-fluid d-flex align-items-center justify-content-between">
-                    <form class="d-flex w-75">
-                        <input class="form-control" type="text" placeholder="Search...">
-                    </form>
-                    <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
-                        + Create
-                    </button>
+                    <p class="pagina">Profile | Cineclick</p>
+                    
                      <button class="btn text-white ms-3" id="logoutBtn" title="Cerrar sesión">
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </button>
@@ -403,17 +408,21 @@
                 </div>
             </div>
             </div>
-            <!-- Aquí está la imagen del perfil, el nombre y el boton para editar -->
-            
-<div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 20px;">
-    <img src="../assets/Yeezus.jpeg" alt="profilePicture" class="rounded-circle" style="height: 150px; width: 150px; object-fit: cover;">
-    <div style="display: flex; align-items: center; gap: 10px;">
-        <h1 id="userName" style="margin: 0;">NAME</h1>
-        <button class="btn bg-dark border-dark text-white" title="Editar" type="button" data-bs-toggle="modal" data-bs-target="#editUserModal">
-            <i class="fas fa-pen"></i>
-        </button>
-    </div>
+
+         <div style="display: flex; flex-direction: column; align-items: center; margin-top: 20px;">
+
+    <img id="fotoPerfil"
+         src="../assets/Yeezus.jpeg"
+         alt="profilePicture"
+         class="rounded-circle"
+         style="height: 150px; width: 150px; object-fit: cover;">
+
+  
+
+    <h1 id="profileName" class="mt-3">NAME</h1>
+
 </div>
+
 
             
             <!-- Tabla de contenido de este usuario -->
@@ -540,11 +549,76 @@
                 });
             });
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const img = document.getElementById("fotoPerfil");
+    const inputFoto = document.getElementById("inputFoto");
+
+    // Cargar foto guardada si existe
+    const guardada = localStorage.getItem("fotoPerfil");
+    if (guardada) {
+        img.src = guardada;
+    }
+
+    // Cuando el usuario suba una nueva foto
+    inputFoto.addEventListener("change", () => {
+        const file = inputFoto.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            img.src = e.target.result;               // mostrar foto
+            localStorage.setItem("fotoPerfil", e.target.result); // guardar
+        };
+        reader.readAsDataURL(file);
+    });
+});
+</script>
+
     
+
 <script src="../scripts/profile_reviews.js"></script>
 <script src="../scripts/watchlist.js"></script>
 
+<script src="../scripts/settings.js"></script>
 
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const USER_ID = localStorage.getItem("user_id");
+    const AUTH_KEY = localStorage.getItem("user_auth_key");
+
+    // Validación por si no hay sesión
+    if (!USER_ID || !AUTH_KEY) {
+        document.getElementById("profileName").textContent = "Usuario";
+        return;
+    }
+
+    try {
+        const response = await fetch(`http://127.0.0.1:3000/users/${USER_ID}`, {
+            method: "GET",
+            headers: {
+                "x-auth": AUTH_KEY
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error("No se pudo obtener el usuario");
+        }
+
+        const user = await response.json();
+
+        // Mostrar el nombre
+        document.getElementById("profileName").textContent = user.name || "Usuario";
+
+    } catch (error) {
+        console.error(error);
+        document.getElementById("profileName").textContent = "Usuario";
+    }
+});
+</script>
 
     </body>
 </html>

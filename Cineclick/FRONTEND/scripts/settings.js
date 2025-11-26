@@ -140,3 +140,37 @@ document.getElementById("confirmLogout")?.addEventListener("click", () => {
     localStorage.clear();
     window.location.href = "../views/PW_Login.html";
 });
+
+
+
+// --- ELEMENTOS ---
+const inputFoto = document.getElementById("inputFoto");
+const fotoPerfil = document.getElementById("fotoPerfil");
+
+// --- CARGAR FOTO DESDE LOCALSTORAGE SI EXISTE ---
+document.addEventListener("DOMContentLoaded", () => {
+    const fotoGuardada = localStorage.getItem("fotoPerfil");
+    if (fotoGuardada) {
+        fotoPerfil.src = fotoGuardada;
+    }
+});
+
+// --- CUANDO EL USUARIO SELECCIONA UNA FOTO ---
+inputFoto.addEventListener("change", function () {
+    const archivo = this.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+
+    lector.onload = function (e) {
+        const imagenBase64 = e.target.result;
+
+        // 1. Mostrar la imagen en pantalla
+        fotoPerfil.src = imagenBase64;
+
+        // 2. Guardarla en localStorage
+        localStorage.setItem("fotoPerfil", imagenBase64);
+    };
+
+    lector.readAsDataURL(archivo);
+});

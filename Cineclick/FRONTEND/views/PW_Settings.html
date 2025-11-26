@@ -179,8 +179,18 @@
         background-color: #e56f26;
       }
 
+             
 
+      .pagina {
+    font-size: 1.2rem;       /* Tamaño moderado */
+    text-align: center;      /* Centrado */
+    font-weight: bold;       /* Negrita */
+    color: #ffffff;          /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente legible */
+    margin: 10px 0;          /* Espaciado opcional */
+}
   </style>
+   <link rel="stylesheet" href="../styles/layout.css">
 </head>
 
 <body>
@@ -197,12 +207,7 @@
   <div class="main-container">
     <nav class="navbar navbar-dark top-navbar">
       <div class="container-fluid d-flex align-items-center justify-content-between">
-        <form class="d-flex w-75">
-          <input class="form-control" type="text" placeholder="Search..." />
-        </form>
-        <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
-          + Create
-        </button>
+        <p class="pagina">Settings | Cineclick</p>
         <button class="btn text-white ms-3" id="logoutBtn" title="Cerrar sesión">
          <i class="fas fa-sign-out-alt fa-lg"></i>
         </button>
@@ -357,6 +362,33 @@
 
 <!-- Tu script settings.js -->
 <script src="../scripts/settings.js"></script>
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+    const fotoGuardada = localStorage.getItem("fotoPerfil");
+    const img = document.getElementById("fotoPerfil");
+    const inputFoto = document.getElementById("inputFoto");
+
+    // Cargar foto guardada
+    if (fotoGuardada && img) {
+        img.src = fotoGuardada;
+    }
+
+    // Cambiar foto y guardarla
+    inputFoto.addEventListener("change", () => {
+        const file = inputFoto.files[0];
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                img.src = e.target.result;
+                localStorage.setItem("fotoPerfil", e.target.result); // Guardar en localStorage
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+</script>
+
 
 
 </body>

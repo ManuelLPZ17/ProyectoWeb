@@ -112,6 +112,16 @@
         .modal-header { background-color: var(--blue); color: white; border-radius: 10px 10px 0 0; }
         .btn-orange { background-color: var(--orange); color: white; border: none; border-radius: 8px; padding: 8px; }
         .btn-orange:hover { background-color: #e56f26; }
+        .pagina {
+    font-size: 1.2rem;       /* Tamaño moderado */
+    text-align: center;      /* Centrado */
+    font-weight: bold;       /* Negrita */
+    color: #ffffff;          /* Texto blanco */
+    font-family: Arial, sans-serif; /* Fuente legible */
+    margin: 10px 0;          /* Espaciado opcional */
+}
+ 
+
 
     </style>
     
@@ -140,12 +150,8 @@
     <div class="main-container">
         <nav class="navbar navbar-dark top-navbar">
                 <div class="container-fluid d-flex align-items-center justify-content-between">
-                    <form class="d-flex w-75">
-                        <input class="form-control" type="text" placeholder="Search...">
-                    </form>
-                    <button class="create-btn ms-3" type="button" data-bs-toggle="modal" data-bs-target="#modalResena">
-                        + Create
-                    </button>
+                    <p  class="pagina">Search | Cineclick</p>
+                    
                     <button class="btn text-white ms-3" id="logoutBtn" title="Cerrar sesión">
                         <i class="fas fa-sign-out-alt fa-lg"></i>
                     </button>
