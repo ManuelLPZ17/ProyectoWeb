@@ -188,7 +188,7 @@ GET http://localhost:3000/api/comments?reviewId=10
 
 
 
-### todos los comentarios del user id 7
+### todos los comentarios del user id 1
 GET http://localhost:3000/api/comments/by-user?userId=7
 
 

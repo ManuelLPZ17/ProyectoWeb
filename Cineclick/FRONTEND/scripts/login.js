@@ -99,3 +99,9 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('formLogin').addEventListener('submit', validateLogin);
   document.getElementById('formRegister').addEventListener('submit', validateRegister);
 });
+
+
+
+
+    
+

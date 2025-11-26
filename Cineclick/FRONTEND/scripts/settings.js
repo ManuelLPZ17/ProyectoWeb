@@ -148,29 +148,98 @@ const inputFoto = document.getElementById("inputFoto");
 const fotoPerfil = document.getElementById("fotoPerfil");
 
 // --- CARGAR FOTO DESDE LOCALSTORAGE SI EXISTE ---
+// document.addEventListener("DOMContentLoaded", () => {
+//     const fotoGuardada = localStorage.getItem("fotoPerfil");
+//     if (fotoGuardada) {
+//         fotoPerfil.src = fotoGuardada;
+//     }
+// });
+
+// // --- CUANDO EL USUARIO SELECCIONA UNA FOTO ---
+// // inputFoto.addEventListener("change", function () {
+// //     const archivo = this.files[0];
+// //     if (!archivo) return;
+
+// //     const lector = new FileReader();
+
+// //     lector.onload = function (e) {
+// //         const imagenBase64 = e.target.result;
+
+// //         // 1. Mostrar la imagen en pantalla
+// //         fotoPerfil.src = imagenBase64;
+
+// //         // 2. Guardarla en localStorage
+// //         localStorage.setItem("fotoPerfil", imagenBase64);
+// //     };
+
+// //     lector.readAsDataURL(archivo);
+// // });
+
+// inputFoto.addEventListener("change", function () {
+//     const archivo = this.files[0];
+//     if (!archivo) return;
+
+//     const loader = document.getElementById("loader");
+//     loader.style.display = "block";  // 🔥 Mostrar loader
+
+//     const lector = new FileReader();
+
+//     lector.onload = function (e) {
+//         const imagenBase64 = e.target.result;
+
+//         // Simular procesamiento (0.8s)
+//         setTimeout(() => {
+//             // 1. Mostrar la imagen en pantalla
+//             fotoPerfil.src = imagenBase64;
+
+//             // 2. Guardarla en localStorage
+//             localStorage.setItem("fotoPerfil", imagenBase64);
+
+//             // 🔥 Ocultar loader
+//             loader.style.display = "none";
+//         }, 800);
+//     };
+
+//     lector.readAsDataURL(archivo);
+// });
+
 document.addEventListener("DOMContentLoaded", () => {
+    const fotoPerfil = document.getElementById("fotoPerfil");
+    const inputFoto = document.getElementById("inputFoto");
+    const loader = document.getElementById("loader");
+
+    // --- Cargar la foto guardada ---
     const fotoGuardada = localStorage.getItem("fotoPerfil");
     if (fotoGuardada) {
         fotoPerfil.src = fotoGuardada;
     }
-});
 
-// --- CUANDO EL USUARIO SELECCIONA UNA FOTO ---
-inputFoto.addEventListener("change", function () {
-    const archivo = this.files[0];
-    if (!archivo) return;
+    // --- Cambiar foto y usar loader ---
+    inputFoto.addEventListener("change", function () {
+        const archivo = this.files[0];
+        if (!archivo) return;
 
-    const lector = new FileReader();
+        loader.style.display = "block";  // Mostrar loader
+        fotoPerfil.style.opacity = "0.3"; // (Opcional) Efecto visual
 
-    lector.onload = function (e) {
-        const imagenBase64 = e.target.result;
+        const lector = new FileReader();
 
-        // 1. Mostrar la imagen en pantalla
-        fotoPerfil.src = imagenBase64;
+        lector.onload = function (e) {
+            const imagenBase64 = e.target.result;
 
-        // 2. Guardarla en localStorage
-        localStorage.setItem("fotoPerfil", imagenBase64);
-    };
+            setTimeout(() => {
+                // Mostrar imagen
+                fotoPerfil.src = imagenBase64;
 
-    lector.readAsDataURL(archivo);
+                // Guardarla
+                localStorage.setItem("fotoPerfil", imagenBase64);
+
+                // Ocultar loader
+                loader.style.display = "none";
+                fotoPerfil.style.opacity = "1";
+            }, 2000);
+        };
+
+        lector.readAsDataURL(archivo);
+    });
 });
