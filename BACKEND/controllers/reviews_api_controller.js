@@ -168,3 +168,22 @@ exports.getAllReviews = async (req, res) => {
         res.status(500).send("Error retrieving all reviews");
     }
 };
+exports.getReviewsByMovie = async (req, res) => {
+    try {
+        const { movieId } = req.query;
+
+        if (!movieId) {
+            return res.status(400).json({ error: "movieId es requerido" });
+        }
+
+        const reviews = await ReviewService.getReviewsByMovie(movieId);
+        res.json(reviews);
+
+    } catch (err) {
+        console.error("Error en getReviewsByMovie:", err);
+        res.status(500).json({ error: "Error obteniendo reseñas por película" });
+    }
+};
+
+
+

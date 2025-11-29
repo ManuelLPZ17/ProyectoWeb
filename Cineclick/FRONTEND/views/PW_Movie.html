@@ -182,7 +182,7 @@
             </div>
         </div>
 
-        <!-- MODAL CREAR RESEÑA -->
+        <!-- MODAL CREAR RESEÑA
         <div class="modal fade" id="modalResena" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -199,15 +199,84 @@
                             <label class="form-label">Reseña</label>
                             <textarea class="form-control" id="cuerpoResena" rows="5" placeholder="Escribe tu reseña..."></textarea>
                         </div>
+                        <div class="modal-body text-center">
+                        <p class="mb-2">Selecciona tu puntuación</p>
+                        <div id="starContainer" class="stars" style="justify-content:center; gap:8px;">
+                            <i class="far fa-star fa-2x" data-value="1"></i>
+                            <i class="far fa-star fa-2x" data-value="2"></i>
+                            <i class="far fa-star fa-2x" data-value="3"></i>
+                            <i class="far fa-star fa-2x" data-value="4"></i>
+                            <i class="far fa-star fa-2x" data-value="5"></i>
+                            <i class="far fa-star fa-2x" data-value="6"></i>
+                            <i class="far fa-star fa-2x" data-value="7"></i>
+                            <i class="far fa-star fa-2x" data-value="8"></i>
+                            <i class="far fa-star fa-2x" data-value="9"></i>
+                            <i class="far fa-star fa-2x" data-value="10"></i>
+                        </div>
+                        <input type="hidden" id="selectedRating" value="0" />
                     </div>
-                    <div class="modal-footer border-0 px-4 pb-4">
+                    </div>
+                                      <div class="modal-footer border-0 px-4 pb-4">
                         <button type="button" class="btn-orange w-100 fw-bold" id="btnPublicarResena">Publicar</button>
                     </div>
+                    
                 </div>
             </div>
-        </div>
+        </div> -->
 
-        <!-- MODAL CALIFICAR -->
+        <!-- MODAL CREAR RESEÑA -->
+<div class="modal fade" id="modalResena" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">Crear reseña</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body px-4">
+                
+                <div class="mb-3">
+                    <label class="form-label">Título</label>
+                    <input type="text" class="form-control" id="tituloResena"/>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Reseña</label>
+                    <textarea class="form-control" id="cuerpoResena" rows="5"></textarea>
+                </div>
+
+                <div class="text-center">
+                    <p class="mb-2">Selecciona tu puntuación</p>
+
+                    <!-- ⭐ IMPORTANTE: IDs ÚNICOS -->
+                    <div id="starsResena" class="stars" style="justify-content:center; gap:8px;">
+                        <i class="far fa-star fa-2x" data-value="1"></i>
+                        <i class="far fa-star fa-2x" data-value="2"></i>
+                        <i class="far fa-star fa-2x" data-value="3"></i>
+                        <i class="far fa-star fa-2x" data-value="4"></i>
+                        <i class="far fa-star fa-2x" data-value="5"></i>
+                        <i class="far fa-star fa-2x" data-value="6"></i>
+                        <i class="far fa-star fa-2x" data-value="7"></i>
+                        <i class="far fa-star fa-2x" data-value="8"></i>
+                        <i class="far fa-star fa-2x" data-value="9"></i>
+                        <i class="far fa-star fa-2x" data-value="10"></i>
+                    </div>
+
+                    <input type="hidden" id="ratingResena" value="0" />
+                </div>
+            </div>
+
+            <div class="modal-footer border-0 px-4 pb-4">
+                <button type="button" class="btn-orange w-100 fw-bold" id="btnPublicarResena">Publicar reseña</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+        <!-- MODAL CALIFICAR
         <div class="modal fade" id="modalCalificar" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -236,7 +305,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <!-- CONTENIDO PRINCIPAL -->
         <div class="content">
@@ -251,14 +320,14 @@
                     </div>
                     <p class="mt-3" id="movie-description">Cargando sinopsis...</p>
                     <div class="d-flex align-items-center gap-3 mt-2">
-                        <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalCalificar">Calificar</button>
+                        <!-- <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalCalificar">Calificar</button> -->
                         <button class="btn-rate" data-bs-toggle="modal" data-bs-target="#modalResena">Crear Reseña</button>
                     </div>
                     <div class="mt-2">
                         <span id="avg-rating-stars">Sin calificaciones</span>
                     </div>
                     <div class="tags d-flex align-items-center gap-2 mt-3" id="movie-tags">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalTag">+</button>
+                        <button type="button"  class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalTag">+</button>
                         <i class="far fa-heart heart-icon ms-2" id="heartIcon"></i>
                     </div>
                 <!-- MODAL CREAR TAG PERSONALIZADO -->
@@ -352,10 +421,36 @@
                     <label class="form-label">Reseña</label>
                     <textarea class="form-control" id="editCuerpoResena" rows="5"></textarea>
                 </div>
+                <!-- <div class="mb-3">
+                    <label class="form-label">Calificacion Actual</label>
+                    <div id="editarCalificacion">0/10 estrellas</div>
+                </div> -->
             </div>
+            
+            <div class="text-center">
+                    <p class="mb-2">Selecciona tu puntuación</p>
+
+                    <!-- ⭐ IMPORTANTE: IDs ÚNICOS PARA EDITAR -->
+                    <div id="starsResenaEditar" class="stars" style="justify-content:center; gap:8px;">
+                        <i class="far fa-star fa-2x" data-value="1"></i>
+                        <i class="far fa-star fa-2x" data-value="2"></i>
+                        <i class="far fa-star fa-2x" data-value="3"></i>
+                        <i class="far fa-star fa-2x" data-value="4"></i>
+                        <i class="far fa-star fa-2x" data-value="5"></i>
+                        <i class="far fa-star fa-2x" data-value="6"></i>
+                        <i class="far fa-star fa-2x" data-value="7"></i>
+                        <i class="far fa-star fa-2x" data-value="8"></i>
+                        <i class="far fa-star fa-2x" data-value="9"></i>
+                        <i class="far fa-star fa-2x" data-value="10"></i>
+                    </div>
+
+                    <!-- ⭐ INPUT CORRECTO PARA EDITAR -->
+                    <input type="hidden" id="ratingResenaEditar" value="0" />
+                </div>
             <div class="modal-footer border-0 px-4 pb-4">
                 <button type="button" class="btn-orange w-100 fw-bold" id="btnActualizarResena">Actualizar</button>
             </div>
+            
         </div>
     </div>
 </div>
@@ -465,6 +560,90 @@
 
         
 
+
+
+     async function getMovieReviews(movieId) {
+    try {
+        const res = await fetch(
+            `http://localhost:3000/api/reviews/by-movie?movieId=${movieId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-auth": localStorage.getItem("user_auth_key") // ← TOKEN!!!
+                }
+            }
+        );
+
+        if (!res.ok) throw new Error("Error obteniendo reseñas");
+
+        const data = await res.json();
+
+        // Si tu backend devuelve array directo:
+        if (Array.isArray(data)) return data;
+
+        // Si tu backend devuelve { reviews: [...] }
+        if (Array.isArray(data.reviews)) return data.reviews;
+
+        return [];
+
+    } catch (err) {
+        console.error(err);
+        return [];
+    }
+}
+
+
+
+        // async function renderAvgRating(movieId) {
+        //     const reviews = await getMovieReviews(movieId);
+
+        //     const container = document.getElementById("avg-rating-stars");
+
+        //     if (!reviews.length) {
+        //         container.innerHTML = "Sin calificaciones";
+        //         return;
+        //     }
+
+        //     // promedio
+        //     const avg =
+        //         reviews.reduce((sum, r) => sum + (r.rating || 0), 0) / reviews.length;
+
+        //     const rounded = Math.round(avg * 10) / 10; // ej: 7.3
+
+        //     container.innerHTML = `⭐ ${rounded}/10 (${reviews.length} reseñas)`;
+        // }
+
+        // Muestra el promedio usando reseñas reales (y dibuja estrellitas 1..10)
+async function renderAvgRating(movieId) {
+    try {
+        const reviews = await getMovieReviews(movieId);
+        const container = document.getElementById("avg-rating-stars");
+
+        if (!reviews || reviews.length === 0) {
+            container.innerHTML = '<span class="text-secondary">Sin calificaciones</span>';
+            return;
+        }
+
+        const avg = reviews.reduce((sum, r) => sum + (Number(r.rating) || 0), 0) / reviews.length;
+        const rounded = Math.round(avg); // para pintar estrellas llenas
+        let html = '';
+
+        for (let i = 1; i <= 10; i++) {
+            // usamos clases para colorear las estrellas; text-warning para llenas, text-secondary para vacías
+            html += `<i class="fas fa-star ${i <= rounded ? 'text-warning' : 'text-secondary'}" style="margin-right:2px;"></i>`;
+        }
+
+        html += `<span class="ms-2 text-dark">${avg.toFixed(1)}/10 (${reviews.length})</span>`;
+        container.innerHTML = html;
+    } catch (err) {
+        console.error("Error en renderAvgRating:", err);
+        const container = document.getElementById("avg-rating-stars");
+        if (container) container.innerHTML = '<span class="text-danger">Error al obtener calificaciones</span>';
+    }
+}
+
+
         async function loadMovieDetails(movieId) {
             try {
                 const detailUrl = `${BASE_URL}${movieId}?api_key=${API_KEY}&language=es-ES`;
@@ -499,87 +678,6 @@
         }
 
            
-//         async function loadMovieReviews(movieId) {
-//             const reviewsContainer = document.querySelector(".reviews");
-
-//             // Mantener el título
-//             reviewsContainer.innerHTML = `
-//                 <h4>Reseñas de la comunidad</h4>
-//                 <p class="text-secondary">Cargando reseñas...</p>
-//             `;
-
-//             try {
-//                 // 1. Usar la ruta correcta
-//                 const response = await fetch(`http://localhost:3000/api/reviews/all`);
-
-//                 if (!response.ok) throw new Error("No se pudieron obtener las reseñas");
-
-//                 const allReviews = await response.json();
-
-//                 // 2. Filtrar por película
-//                 const movieReviews = allReviews.filter(r => r.movie_id == movieId);
-
-//                 // 3. Si no hay reseñas, mostrar aviso
-//                 if (movieReviews.length === 0) {
-//                     reviewsContainer.innerHTML = `
-//                         <h4>Reseñas de la comunidad</h4>
-//                         <p class="text-secondary">No hay reseñas para esta película aún.</p>
-//                     `;
-//                     return;
-//                 }
-
-//                 // 4. Limpiar debajo del título
-//                 reviewsContainer.innerHTML = `<h4>Reseñas de la comunidad</h4>`;
-
-//                 // 5. Crear las tarjetas
-//                 movieReviews.forEach(review => {
-//                     const div = document.createElement("div");
-//                     div.className = "review-card mt-3";
-
-//                     div.innerHTML = `
-//                         <div class="review-header">
-//                             <span class="review-user">${review.owner_name || "Usuario"}</span>
-
-//                             <div class="review-actions">
-//                                 <i class="fas fa-edit edit-review" data-id="${review.id}"></i>
-//                                 <i class="fas fa-trash delete-review" data-id="${review.id}"></i>
-//                             </div>
-//                         </div>
-
-//                         <div class="review-title">${review.title}</div>
-//                         <div class="review-text">${review.description}</div>
-                        
-//                         <!-- BOTONES DE COMENTARIOS -->
-//     <div class="mt-3">
-//         <button class="btn btn-sm btn-primary ver-comentarios-btn" data-id="${review.id}">
-//             Ver comentarios
-//         </button>
-
-//         <button class="btn btn-sm btn-outline-success escribir-comentario-btn" data-id="${review.id}">
-//             Escribir comentario
-//         </button>
-//     </div>
-
-//     <!-- CONTENEDOR DE COMENTARIOS -->
-//     <div class="comentarios-container mt-2" id="comentarios-${review.id}" style="display:none;">
-//         <p class="text-secondary small">Cargando comentarios...</p>
-//     </div>
-
-//                         `;
-
-
-//                     reviewsContainer.appendChild(div);
-//                 });
-
-//             } catch (error) {
-//                 console.error(error);
-//                 reviewsContainer.innerHTML = `
-//                     <h4>Reseñas de la comunidad</h4>
-//                     <p class="text-danger">Error al cargar reseñas.</p>
-//                 `;
-//             }
-// }
-
 
 async function loadMovieReviews(movieId) {
     const reviewsContainer = document.querySelector(".reviews");
@@ -618,6 +716,7 @@ async function loadMovieReviews(movieId) {
                 <div class="review-header">
                     <span class="review-user">${review.owner_name || "Usuario"}</span>
 
+
                     <div class="review-actions">
                         ${
                             review.owner == currentUser ? `
@@ -630,6 +729,10 @@ async function loadMovieReviews(movieId) {
 
                 <div class="review-title">${review.title}</div>
                 <div class="review-text">${review.description}</div>
+                <!-- ⭐ CALIFICACIÓN DE LA RESEÑA -->
+                <div class="review-rating mb-1">
+                    <span class="text-warning">⭐ ${review.rating} / 10</span>
+                </div>
 
                 <!-- BOTONES DE COMENTARIOS -->
                 <div class="mt-3">
@@ -660,34 +763,6 @@ async function loadMovieReviews(movieId) {
 }
 
 
-// CLICK EN "Ver comentarios"
-
-// document.addEventListener("click", (e) => {
-//     if (e.target.classList.contains("ver-comentarios-btn")) {
-//         const reviewId = e.target.dataset.id;
-
-//         // Buscar contenedor
-//         let cont = document.getElementById(`comentarios-${reviewId}`);
-
-//         // Si no existe, crearlo dinámicamente
-//         if (!cont) {
-//             const reviewCard = e.target.closest('.review-card'); // busca la tarjeta padre
-//             cont = document.createElement('div');
-//             cont.className = 'comentarios-container mt-2';
-//             cont.id = `comentarios-${reviewId}`;
-//             cont.style.display = 'none';
-//             reviewCard.appendChild(cont);
-//         }
-
-//         // Alternar visibilidad
-//         if (cont.style.display === "none") {
-//             cont.style.display = "block";
-//             loadComentarios(reviewId, cont);
-//         } else {
-//             cont.style.display = "none";
-//         }
-//     }
-// });
 
 document.addEventListener("click", (e) => {
     if (e.target.classList.contains("ver-comentarios-btn")) {
@@ -721,44 +796,6 @@ document.addEventListener("click", (e) => {
     }
 });
 
-/**
- * Cargar comentarios de un review
- * GET /api/comments?reviewId=ID
- */
-// async function loadComentarios(reviewId, cont) {
-//     cont.innerHTML = `<p class="text-secondary small">Cargando comentarios...</p>`;
-
-//     try {
-//         const res = await fetch(`http://localhost:3000/api/comments?reviewId=${reviewId}`);
-
-//         if (!res.ok) {
-//             cont.innerHTML = `<p class="text-danger small">No se pudieron obtener los comentarios.</p>`;
-//             return;
-//         }
-
-//         const payload = await res.json();
-//         const comments = Array.isArray(payload) ? payload : (payload.data || []);
-
-//         if (comments.length === 0) {
-//             cont.innerHTML = `<p class="text-secondary small">No hay comentarios aún.</p>`;
-//             return;
-//         }
-
-//         cont.innerHTML = comments.map(c => `
-//             <div class="p-2 border rounded mb-2">
-//                 <div class="d-flex justify-content-between">
-//                     <strong>${c.owner_name || "Usuario"}</strong>
-//                     <small class="text-muted">${new Date(c.created_at).toLocaleString()}</small>
-//                 </div>
-//                 <div class="mt-1">${(c.content || "").replace(/</g, "&lt;")}</div>
-//             </div>
-//         `).join("");
-
-//     } catch (error) {
-//         console.error(error);
-//         cont.innerHTML = `<p class="text-danger small">Error al cargar comentarios.</p>`;
-//     }
-// }
 
 async function loadComentarios(reviewId, cont) {
     
@@ -930,7 +967,9 @@ document.getElementById("btnActualizarResena").addEventListener("click", async (
     const reviewId = document.getElementById("btnActualizarResena").dataset.id;
     const title = document.getElementById("editTituloResena").value.trim();
     const description = document.getElementById("editCuerpoResena").value.trim();
-    const rating = 5; // ejemplo
+    const rating = parseInt(document.getElementById("ratingResenaEditar").value, 10);
+    
+   // const rating = 5; // ejemplo
     const tags = [];
 
     if (!title || !description) {
@@ -956,6 +995,7 @@ document.getElementById("btnActualizarResena").addEventListener("click", async (
         const params = new URLSearchParams(window.location.search);
         const movieId = params.get("id") || 105;
         loadMovieReviews(movieId);
+        renderAvgRating(movieId);
 
     } catch (err) {
         console.error(err);
@@ -979,6 +1019,9 @@ document.addEventListener("click", async (e) => {
         const modal = new bootstrap.Modal(document.getElementById("modalEditarResena"));
         document.getElementById("editTituloResena").value = review.title;
         document.getElementById("editCuerpoResena").value = review.description;
+        //document.getElementById("editarCalificacion").value = review.rating;
+
+        
         modal.show();
 
         // Guardar temporalmente el id para actualizar
@@ -993,6 +1036,7 @@ document.addEventListener("click", async (e) => {
             const id = params.get("id") || 105;
             loadMovieDetails(id);
             loadMovieReviews(id);
+            renderAvgRating(id);
             
 
 
@@ -1017,38 +1061,39 @@ document.addEventListener("click", async (e) => {
                 heartIcon.classList.toggle("far");
             });
 
-            const stars = document.querySelectorAll("#starContainer i");
-            const selectedRating = document.getElementById("selectedRating");
+            // const stars = document.querySelectorAll("#starContainer i");
+            // const selectedRating = document.getElementById("selectedRating");
 
-            stars.forEach((star, idx) => {
-                star.addEventListener("mouseenter", () => {
-                    stars.forEach((s,i) => s.classList.toggle('fas', i <= idx));
-                    stars.forEach((s,i) => s.classList.toggle('far', i > idx));
-                });
+            // stars.forEach((star, idx) => {
+            //     star.addEventListener("mouseenter", () => {
+            //         stars.forEach((s,i) => s.classList.toggle('fas', i <= idx));
+            //         stars.forEach((s,i) => s.classList.toggle('far', i > idx));
+            //     });
 
-                star.addEventListener("mouseleave", () => {
-                    const sel = parseInt(selectedRating.value, 10) || 0;
-                    stars.forEach((s,i) => {
-                        s.classList.toggle('fas', i < sel);
-                        s.classList.toggle('far', i >= sel);
-                    });
-                });
+            //     star.addEventListener("mouseleave", () => {
+            //         const sel = parseInt(selectedRating.value, 10) || 0;
+            //         stars.forEach((s,i) => {
+            //             s.classList.toggle('fas', i < sel);
+            //             s.classList.toggle('far', i >= sel);
+            //         });
+            //     });
 
-                star.addEventListener("click", () => {
-                    const value = parseInt(star.dataset.value, 10);
-                    selectedRating.value = value;
-                    stars.forEach((s,i) => {
-                        s.classList.toggle('fas', i < value);
-                        s.classList.toggle('far', i >= value);
-                    });
-                });
-            });
+            //     star.addEventListener("click", () => {
+            //         const value = parseInt(star.dataset.value, 10);
+            //         selectedRating.value = value;
+            //         stars.forEach((s,i) => {
+            //             s.classList.toggle('fas', i < value);
+            //             s.classList.toggle('far', i >= value);
+            //         });
+            //     });
+            // });
 
-            document.getElementById("submitRatingBtn").addEventListener("click", () => {
-                const val = selectedRating.value || 0;
-                alert(`Valoración enviada: ${val} estrellas`);
-                bootstrap.Modal.getInstance(document.getElementById('modalCalificar')).hide();
-            });
+            // document.getElementById("submitRatingBtn").addEventListener("click", () => {
+            //     const val = selectedRating.value || 0;
+            //     alert(`Valoración enviada: ${val} estrellas`);
+            //     bootstrap.Modal.getInstance(document.getElementById('modalCalificar')).hide();
+            // });
+            
 
             document.getElementById("addCategoryBtn").addEventListener("click", () => {
                 const input = document.getElementById("newCategory");
@@ -1065,14 +1110,136 @@ document.addEventListener("click", async (e) => {
                 bootstrap.Modal.getInstance(document.getElementById('modalCategoria')).hide();
             });
 
-            document.getElementById("btnPublicarResena").addEventListener("click", async () => {
+            // document.getElementById("btnPublicarResena").addEventListener("click", async () => {
+            //     const title = document.getElementById("tituloResena").value.trim();
+            //     const description = document.getElementById("cuerpoResena").value.trim();
+            //     const rating =  5; // ejemplo
+            //     const due_date = new Date().toISOString().split("T")[0]; // "2025-11-24"
+
+            //     if (!title || !description) {
+            //         alert("Completa el título y la reseña.");
+            //         return;
+            //     }
+
+            //     const params = new URLSearchParams(window.location.search);
+            //     const movieId = params.get("id") || 105;
+
+            //     try {
+            //         const response = await fetch("http://localhost:3000/api/reviews", {
+            //             method: "POST",
+            //             headers: {
+            //                 "Content-Type": "application/json",
+            //                 "x-auth": localStorage.getItem("user_auth_key")
+            //             },
+            //             body: JSON.stringify({
+            //                 movie_id: movieId,
+            //                 title,
+            //                 description,
+            //                 due_date,
+            //                 rating,
+            //                 tags: []
+            //             })
+            //         });
+
+            //         if (!response.ok) throw new Error("Error al crear reseña");
+
+            //         bootstrap.Modal.getInstance(document.getElementById("modalResena")).hide();
+
+            //         document.getElementById("tituloResena").value = "";
+            //         document.getElementById("cuerpoResena").value = "";
+
+            //         loadMovieReviews(movieId);
+
+            //     } catch (err) {
+            //         console.error(err);
+            //         alert("Ocurrió un error al publicar tu reseña.");
+            //     }
+            // });
+
+
+            
+    // =========================
+//  ESTRELLAS (solo del modal reseña)
+// =========================
+const stars = document.querySelectorAll("#starsResena i");
+const ratingInput = document.getElementById("ratingResena");
+
+stars.forEach((star, idx) => {
+
+    star.addEventListener("mouseenter", () => {
+        stars.forEach((s, i) => {
+            s.classList.toggle("fas", i <= idx);
+            s.classList.toggle("far", i > idx);
+        });
+    });
+
+    star.addEventListener("mouseleave", () => {
+        const sel = parseInt(ratingInput.value) || 0;
+        stars.forEach((s, i) => {
+            s.classList.toggle("fas", i < sel);
+            s.classList.toggle("far", i >= sel);
+        });
+    });
+
+    star.addEventListener("click", () => {
+        const value = parseInt(star.dataset.value);
+        ratingInput.value = value;
+
+        stars.forEach((s, i) => {
+            s.classList.toggle("fas", i < value);
+            s.classList.toggle("far", i >= value);
+        });
+    });
+});
+
+// =========================
+//  ESTRELLAS (modal EDITAR reseña)
+// =========================
+const starsEditar = document.querySelectorAll("#starsResenaEditar i");
+const ratingInputEditar = document.getElementById("ratingResenaEditar");
+
+starsEditar.forEach((star, idx) => {
+
+    star.addEventListener("mouseenter", () => {
+        starsEditar.forEach((s, i) => {
+            s.classList.toggle("fas", i <= idx);
+            s.classList.toggle("far", i > idx);
+        });
+    });
+
+    star.addEventListener("mouseleave", () => {
+        const sel = parseInt(ratingInputEditar.value) || 0;
+        starsEditar.forEach((s, i) => {
+            s.classList.toggle("fas", i < sel);
+            s.classList.toggle("far", i >= sel);
+        });
+    });
+
+    star.addEventListener("click", () => {
+        const value = parseInt(star.dataset.value);
+        ratingInputEditar.value = value;
+
+        starsEditar.forEach((s, i) => {
+            s.classList.toggle("fas", i < value);
+            s.classList.toggle("far", i >= value);
+        });
+    });
+});
+
+
+
+// =========================
+//  PUBLICAR RESEÑA
+// =========================
+document.getElementById("btnPublicarResena").addEventListener("click", async () => {
     const title = document.getElementById("tituloResena").value.trim();
     const description = document.getElementById("cuerpoResena").value.trim();
-    const rating =  5; // ejemplo
+    const rating = parseInt(document.getElementById("ratingResena").value, 10);
     const due_date = new Date().toISOString().split("T")[0]; // "2025-11-24"
 
-    if (!title || !description) {
-        alert("Completa el título y la reseña.");
+
+    if (!title || !description || rating === 0) {
+        alert("Completa título, reseña y calificación de estrellas");
         return;
     }
 
@@ -1090,30 +1257,45 @@ document.addEventListener("click", async (e) => {
                 movie_id: movieId,
                 title,
                 description,
-                due_date,
                 rating,
+                due_date: due_date,
                 tags: []
             })
         });
 
         if (!response.ok) throw new Error("Error al crear reseña");
 
+        // Cerrar modal
         bootstrap.Modal.getInstance(document.getElementById("modalResena")).hide();
 
+        // Limpiar campos
         document.getElementById("tituloResena").value = "";
         document.getElementById("cuerpoResena").value = "";
+        document.getElementById("ratingResena").value = "0";
 
+        // Resetea estrellas visualmente
+        document.querySelectorAll("#starsResena i").forEach(star => {
+            star.classList.remove("fas");
+            star.classList.add("far");
+        });
+
+        // Recargar reseñas mostradas
         loadMovieReviews(movieId);
+        renderAvgRating(movieId);
 
-    } catch (err) {
-        console.error(err);
+        alert("¡Tu reseña fue publicada!");
+
+    } catch (error) {
+        console.error(error);
         alert("Ocurrió un error al publicar tu reseña.");
     }
 });
 
+
+
+
+
         });
-
-
 
 
     document.getElementById("btnActualizarComentario").addEventListener("click", async () => {
@@ -1282,52 +1464,53 @@ import("./../scripts/watchlist.js").then(() => {
     <script src="../scripts/watchlist.js"></script>
 
 <script>
-function getLocalRatings(movieId) {
-    // Obtiene array de ratings guardados en localStorage
-    const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
-    return ratings[movieId] ? [ratings[movieId]] : [];
-}
+    
+// function getLocalRatings(movieId) {
+//     // Obtiene array de ratings guardados en localStorage
+//     const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
+//     return ratings[movieId] ? [ratings[movieId]] : [];
+// }
 
-function setLocalRating(movieId, value) {
-    const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
-    ratings[movieId] = value;
-    localStorage.setItem('movie_ratings', JSON.stringify(ratings));
-}
+// function setLocalRating(movieId, value) {
+//     const ratings = JSON.parse(localStorage.getItem('movie_ratings') || '{}');
+//     ratings[movieId] = value;
+//     localStorage.setItem('movie_ratings', JSON.stringify(ratings));
+// }
 
-function renderAvgRating(movieId) {
-    const ratings = getLocalRatings(movieId);
-    let html = '';
-    if (ratings.length) {
-        const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
-        const rounded = Math.round(avg);
-        for (let i = 1; i <= 10; i++) {
-            html += `<i class='fas fa-star${i <= rounded ? " text-warning" : " text-secondary"}'></i>`;
-        }
-        html += ` <span class='ms-1 text-dark'>${avg.toFixed(1)}/10</span>`;
-    } else {
-        html = '<span class="text-secondary">Sin calificaciones</span>';
-    }
-    document.getElementById('avg-rating-stars').innerHTML = html;
-}
+// function renderAvgRating(movieId) {
+//     const ratings = getLocalRatings(movieId);
+//     let html = '';
+//     if (ratings.length) {
+//         const avg = ratings.reduce((a,b) => a+b, 0) / ratings.length;
+//         const rounded = Math.round(avg);
+//         for (let i = 1; i <= 10; i++) {
+//             html += `<i class='fas fa-star${i <= rounded ? " text-warning" : " text-secondary"}'></i>`;
+//         }
+//         html += ` <span class='ms-1 text-dark'>${avg.toFixed(1)}/10</span>`;
+//     } else {
+//         html = '<span class="text-secondary">Sin calificaciones</span>';
+//     }
+//     document.getElementById('avg-rating-stars').innerHTML = html;
+// }
 
-document.addEventListener('DOMContentLoaded', () => {
-    const params = new URLSearchParams(window.location.search);
-    const movieId = params.get('id') || '105';
-    renderAvgRating(movieId);
+// document.addEventListener('DOMContentLoaded', () => {
+//     const params = new URLSearchParams(window.location.search);
+//     const movieId = params.get('id') || '105';
+//     renderAvgRating(movieId);
 
-    document.getElementById('submitRatingBtn').addEventListener('click', () => {
-        const val = parseInt(document.getElementById('selectedRating').value, 10) || 0;
-        if (!val) {
-            alert('Selecciona una calificación.');
-            return;
-        }
-        setLocalRating(movieId, val);
-        renderAvgRating(movieId);
-        bootstrap.Modal.getInstance(document.getElementById('modalCalificar')).hide();
-        alert('¡Calificación guardada localmente!');
-    });
-});
-</script>
+//     document.getElementById('submitRatingBtn').addEventListener('click', () => {
+//         const val = parseInt(document.getElementById('selectedRating').value, 10) || 0;
+//         if (!val) {
+//             alert('Selecciona una calificación.');
+//             return;
+//         }
+//         setLocalRating(movieId, val);
+//         renderAvgRating(movieId);
+//         bootstrap.Modal.getInstance(document.getElementById('modalCalificar')).hide();
+//         alert('¡Calificación guardada localmente!');
+//     });
+// });
+// </script>
 
 </body>
 </html>

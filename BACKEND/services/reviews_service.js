@@ -70,6 +70,39 @@ module.exports = {
         }));
     },
 
+
+    // READ: get reviews by movieId
+async getReviewsByMovie(movieId) {
+
+    // Convertir a número si en la BD movie_id es Number
+    const movieIdNum = Number(movieId);
+
+    // Buscar todas las reseñas de esa película
+    const reviews = await ReviewModel.find({ movie_id: movieIdNum }).exec();
+
+    const result = [];
+
+    for (const r of reviews) {
+        const user = await UserModel.findOne({ id: r.owner }).exec();
+
+        result.push({
+            id: r.id,
+            title: r.title,
+            description: r.description,
+            rating: r.rating,
+            movie_id: r.movie_id,
+            owner: r.owner,
+            owner_name: user?.name || null,
+            due_date: r.due_date,
+            status: r.status,
+            tags: r.tags
+        });
+    }
+
+    return result;
+},
+
+
     // UPDATE
     async updateReview(id, updateFields) {
 

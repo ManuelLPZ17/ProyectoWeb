@@ -18,6 +18,10 @@ const routerReviews = express.Router();
 // Primero declaramos el GET de todas las reseñas (no requiere auth)
 routerReviews.get('/all', reviewsController.getAllReviews);
 
+// Obtener reseñas por movieId (no requiere auth)
+routerReviews.get('/by-movie', reviewsController.getReviewsByMovie);
+
+
 // Ahora activamos el middleware global de autenticación para el resto
 routerReviews.use(authMiddleware.authRequiredMiddleware);
 
