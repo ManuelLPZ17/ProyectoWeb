@@ -5,9 +5,13 @@ const CommentService = require('../services/comments_service');
 const ReviewService = require('../services/reviews_service');
 const UserService = require('../services/users_service');
 
+
 // CREATE COMMENT
 exports.createComment = async (req, res) => {
     try {
+       // console.log("📩 BODY RECIBIDO:", req.body);
+        //console.log("📌 req.userId:", req.userId);
+
         const { id_review, content } = req.body;
         const owner = req.userId;
 
@@ -23,27 +27,30 @@ exports.createComment = async (req, res) => {
             return res.status(404).send("User not found.");
         }
 
-        // Crear comentario
+        // Crear instancia de comentario (sin ID todavía)
         const comment = new Comment({
             id_review,
-            movie_id: review.movie_id,  // <<< 🔥 importante
+            movie_id: review.movie_id,
             owner,
             owner_name: user.name,
             content
         });
 
-        await CommentService.saveComment(comment.toObj());
+        // Generar objeto final con ID autoincremental
+        const obj = await comment.toObj();
+
+        await CommentService.saveComment(obj);
 
         res.status(201).json({
             message: "Comment created successfully",
-            data: comment.toObj()
+            data: obj
         });
 
     } catch (err) {
+        console.error("🔥 ERROR BACKEND:", err);
         res.status(400).send(err.message);
     }
 };
-
 
 // GET comments by review
 exports.getCommentsByReviewId = async (req, res) => {

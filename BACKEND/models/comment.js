@@ -1,9 +1,6 @@
 // BACKEND/models/comment.js
 
-let nextCommentId = 1;
-function getNextCommentID() {
-    return nextCommentId++;
-}
+const CommentService = require("../services/comments_service");
 
 class Comment {
     constructor({ id_review, movie_id, owner, owner_name, content }) {
@@ -13,7 +10,6 @@ class Comment {
         if (!owner_name) throw new Error("owner_name is required");
         if (!content || content.trim() === "") throw new Error("content cannot be empty");
 
-        this.id = getNextCommentID();
         this.id_review = id_review;
         this.movie_id = movie_id;
         this.owner = owner;
@@ -22,9 +18,12 @@ class Comment {
         this.created_at = new Date().toISOString();
     }
 
-    toObj() {
+    async toObj() {
+        const last = await CommentService.getLastComment();
+        const newId = last ? last.id + 1 : 1;
+
         return {
-            id: this.id,
+            id: newId,
             id_review: this.id_review,
             movie_id: this.movie_id,
             owner: this.owner,

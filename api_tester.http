@@ -122,6 +122,16 @@ Content-Type: application/json
   "tags": []
 }
 
+###
+POST http://localhost:3000/api/comments
+Content-Type: application/json
+x-auth: Holamundo12345#
+
+{
+  "id_review": 7,
+  "content": "Este es un comentario de prueba"
+}
+
 
 
 ############################################

@@ -1403,7 +1403,7 @@ document.getElementById("btnCrearComentario").addEventListener("click", async ()
                 "x-auth": localStorage.getItem("user_auth_key")
             },
             body: JSON.stringify({
-                id_review: reviewIdToComment,
+                id_review: Number(reviewIdToComment),
                 owner: localStorage.getItem("user_id"),
                 content,
                 date: new Date().toISOString()

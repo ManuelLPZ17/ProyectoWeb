@@ -5,6 +5,7 @@ const commentsController = require('../controllers/comments_api_controller');
 const auth = require('../middlewares/authMiddleware');
 const { authCommentOwnerMiddleware } = require('../middlewares/authCommentOwner');
 
+//router.post('/', commentsController.createComment);
 router.post('/', auth.authRequiredMiddleware, commentsController.createComment);
 router.get('/', commentsController.getCommentsByReviewId);
 router.get('/user/:id', commentsController.getCommentsByUserId);

@@ -30,3 +30,7 @@ exports.updateComment = async (id, updateData) => {
 exports.deleteComment = async (id) => {
     return CommentMongooseModel.findOneAndDelete({ id }).exec();
 };
+
+exports.getLastComment = async () => {
+    return CommentMongooseModel.findOne().sort({ id: -1 }).exec();
+};
