@@ -25,6 +25,9 @@ routerReviews.get('/by-movie', reviewsController.getReviewsByMovie);
 // Ahora activamos el middleware global de autenticación para el resto
 routerReviews.use(authMiddleware.authRequiredMiddleware);
 
+// Nueva ruta: verificar si ya existe reseña
+routerReviews.get('/check', reviewsController.checkUserReviewExists);
+
 /* ---------- 1. CREAR RESEÑA ---------- */
 routerReviews.post('/', reviewsController.createReview);
 

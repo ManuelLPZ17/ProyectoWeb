@@ -1246,7 +1246,22 @@ document.getElementById("btnPublicarResena").addEventListener("click", async () 
     const params = new URLSearchParams(window.location.search);
     const movieId = params.get("id") || 105;
 
+    
+
     try {
+
+        const check = await fetch(`http://localhost:3000/api/reviews/check?movie_id=${movieId}`, {
+            headers: {
+                "x-auth": localStorage.getItem("user_auth_key")
+            }
+        });
+
+        const checkData = await check.json();
+
+        if (checkData.exists === true) {
+            alert("Solo puedes publicar una reseña por película.");
+            return; // detener el proceso
+        }
         const response = await fetch("http://localhost:3000/api/reviews", {
             method: "POST",
             headers: {

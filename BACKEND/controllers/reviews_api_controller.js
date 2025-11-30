@@ -185,5 +185,27 @@ exports.getReviewsByMovie = async (req, res) => {
     }
 };
 
+exports.checkUserReviewExists = async (req, res) => {
+    try {
+        const owner = req.userId;   // viene del authMiddleware
+        const { movie_id } = req.query;
+
+        if (!movie_id) {
+            return res.status(400).json({ error: "movie_id es requerido" });
+        }
+
+        // Obtener todas las reseñas del usuario
+        const reviews = await ReviewService.getReviewsByUser(owner);
+
+        // Buscar coincidencia con movie_id
+        const exists = reviews.some(r => r.movie_id == movie_id);
+
+        res.json({ exists });
+
+    } catch (err) {
+        console.error("❌ Error en checkUserReviewExists:", err);
+        res.status(500).json({ error: "Error verificando reseña" });
+    }
+};
 
 
