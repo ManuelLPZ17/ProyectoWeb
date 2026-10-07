@@ -1,8 +1,6 @@
 const axios = require("axios");
 const watchlistService = require("../services/watchlist_service");
-
-// 🔥 API KEY DIRECTA
-const TMDB_API_KEY = "65f588c6445a775c9a45fed2ecb97ae4";
+const config = require("../config/config");
 
 // -----------------------------------------------------------------------------
 // POST /watchlist → agregar película
@@ -16,9 +14,11 @@ exports.addItemToWatchlist = async (req, res) => {
         }
 
         // 1️⃣ Obtener datos reales desde TMDB
-        const tmdbUrl = `https://api.themoviedb.org/3/movie/${movieId}?api_key=${TMDB_API_KEY}&language=es-MX`;
+        const tmdbUrl = `https://api.themoviedb.org/3/movie/${movieId}`;
 
-        const tmdbRes = await axios.get(tmdbUrl);
+        const tmdbRes = await axios.get(tmdbUrl, {
+            params: { api_key: config.TMDB_API_KEY, language: "es-MX" }
+        });
         const movieData = tmdbRes.data;
 
         // 2️⃣ Armar datos a guardar
@@ -56,11 +56,12 @@ exports.getWatchlist = async (req, res) => {
 
         const detailedItems = await Promise.all(
             items.map(async (item) => {
-                const tmdbUrl =
-                    `https://api.themoviedb.org/3/movie/${item.movie_id}?api_key=${TMDB_API_KEY}&language=es-MX`;
+                const tmdbUrl = `https://api.themoviedb.org/3/movie/${item.movie_id}`;
 
                 try {
-                    const response = await axios.get(tmdbUrl);
+                    const response = await axios.get(tmdbUrl, {
+                        params: { api_key: config.TMDB_API_KEY, language: "es-MX" }
+                    });
                     const movie = response.data;
 
                     // Asegura que _id esté presente

@@ -1,5 +1,4 @@
-const API_KEY = "65f588c6445a775c9a45fed2ecb97ae4";
-const BASE_URL = "https://api.themoviedb.org/3/movie/";
+const BASE_URL = "/api/tmdb/movie/";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 const reviewsContainer = document.getElementById("reviewsContainer");
@@ -100,7 +99,7 @@ async function displayReviews(reviews) {
 // 3️⃣ Obtener poster de TMDb
 // =======================
 async function getMoviePoster(movieId) {
-    const url = `${BASE_URL}${movieId}?api_key=${API_KEY}&language=es-ES`;
+    const url = `${BASE_URL}${movieId}?language=es-ES`;
     try {
         const response = await fetch(url);
         const movie = await response.json();

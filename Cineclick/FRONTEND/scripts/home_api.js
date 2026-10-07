@@ -1,8 +1,7 @@
 // home_api.js
 
 
-const API_KEY = '65f588c6445a775c9a45fed2ecb97ae4'; 
-const BASE_URL = 'https://api.themoviedb.org/3/';
+const BASE_URL = '/api/tmdb/';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // IDs de películas de ejemplo de TMDb para las secciones
@@ -130,7 +129,7 @@ async function loadMoviesSection(containerId, movieIds) {
 
     // Cargar películas una por una
     for (const id of movieIds) {
-        const url = `${BASE_URL}movie/${id}?api_key=${API_KEY}&language=es-ES`;
+        const url = `${BASE_URL}movie/${id}?language=es-ES`;
         try {
             const response = await fetch(url);
             if (!response.ok) throw new Error(`Error al cargar la película ${id}`);

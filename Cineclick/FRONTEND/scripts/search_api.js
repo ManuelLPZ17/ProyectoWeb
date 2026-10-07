@@ -1,8 +1,6 @@
 // search_api.js
 
-// **UTILIZA TU CLAVE API DE TMDb**
-const API_KEY = '65f588c6445a775c9a45fed2ecb97ae4'; 
-const BASE_URL = 'https://api.themoviedb.org/3/';
+const BASE_URL = '/api/tmdb/';
 const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 // Elementos del DOM
@@ -81,14 +79,14 @@ async function performSearch() {
     // 1. Determinar el Endpoint: ¿Búsqueda por texto o Discovery por género?
     if (query) {
         // Búsqueda por texto (query)
-        url = `${BASE_URL}search/movie?api_key=${API_KEY}&query=${encodeURIComponent(query)}&language=es-ES`;
+        url = `${BASE_URL}search/movie?query=${encodeURIComponent(query)}&language=es-ES`;
     } else if (activeGenreIds.length > 0) {
         // Búsqueda por Discovery (géneros)
         const genres = activeGenreIds.join(',');
-        url = `${BASE_URL}discover/movie?api_key=${API_KEY}&with_genres=${genres}&language=es-ES&sort_by=popularity.desc`;
+        url = `${BASE_URL}discover/movie?with_genres=${genres}&language=es-ES`;
     } else {
         // Si no hay texto ni filtros, mostramos las películas populares por defecto
-        url = `${BASE_URL}movie/popular?api_key=${API_KEY}&language=es-ES`;
+        url = `${BASE_URL}movie/popular?language=es-ES`;
     }
 
     // 2. Ejecutar la Petición

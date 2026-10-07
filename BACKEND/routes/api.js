@@ -11,6 +11,7 @@ const tagsRouter = require('./tags');       // Faltan crear
 const commentsRouter = require('./comments');
 const watchlistRouter = require('./watchlist');
 const authRouter = require('./auth');
+const tmdbRouter = require('./tmdb');
 
 // --- MIDDLEWARE DE AUTENTICACIÓN (Rutas que devuelven HTML) ---
 // Solo protege los HTML que requieren login
@@ -56,5 +57,6 @@ routerApi.use('/api/tags', tagsRouter);           // /api/tags
 routerApi.use('/api/comments', commentsRouter);   // /api/comments
 routerApi.use('/api/watchlist', watchlistRouter); // /api/watchlist
 routerApi.use('/api/auth', authRouter);           // /api/auth
+routerApi.use('/api/tmdb', tmdbRouter);           // /api/tmdb
 
 module.exports = routerApi;

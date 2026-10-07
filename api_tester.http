@@ -3,11 +3,12 @@
 # =========================================================================
 
 @url = http://127.0.0.1:3000
-@admin_auth = admin_auth_key_secreta
-@user1_pass = Pw12345678#
+@admin_auth = {{$dotenv ADMIN_AUTH_KEY}}
+@user1_pass = {{$dotenv TEST_USER1_PASSWORD}}
 
 
-@user2_pass = Pw23456789#
+@user2_pass = {{$dotenv TEST_USER2_PASSWORD}}
+@user3_pass = {{$dotenv TEST_USER3_PASSWORD}}
 @user1_id = 1 
 @user2_id = 2 
 @tag_id = 1
@@ -55,8 +56,8 @@ Content-Type: application/json
 {
     "name": "Manuel",
     "email": "manuel@cineclick.com",
-    "password": "Holamundo12345#",
-    "confirm_password": "Holamundo12345#"
+    "password": "{{user3_pass}}",
+    "confirm_password": "{{user3_pass}}"
 }
 
 
@@ -110,7 +111,7 @@ Content-Type: application/json
 ## 1. CREAR RESEÑA
 ############################################
 POST {{url}}/api/reviews
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 Content-Type: application/json
 
 {
@@ -125,7 +126,7 @@ Content-Type: application/json
 ###
 POST http://localhost:3000/api/comments
 Content-Type: application/json
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 
 {
   "id_review": 7,
@@ -138,7 +139,7 @@ x-auth: Holamundo12345#
 ## 2. OBTENER TODAS LAS RESEÑAS DEL USUARIO
 ############################################
 GET {{url}}/api/reviews
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 
 
 
@@ -154,7 +155,7 @@ x-auth: {{user1_pass}}
 ## 4. ACTUALIZAR RESEÑA (PATCH)
 ############################################
 PATCH {{url}}/api/reviews/2
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 Content-Type: application/json
 
 {
@@ -170,7 +171,7 @@ Content-Type: application/json
 ## 5. ELIMINAR RESEÑA POR ID
 ############################################
 DELETE {{url}}/api/reviews/2
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 
 
 
@@ -185,7 +186,7 @@ GET http://localhost:3000/api/reviews/all
 
 ##################### voy a crear un comentario a una reseña
 POST http://localhost:3000/api/comments
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 Content-Type: application/json
 
 {
@@ -206,7 +207,7 @@ GET http://localhost:3000/api/comments/by-user?userId=7
 ### editar comentarios
 
 PATCH http://localhost:3000/api/comments/8
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 Content-Type: application/json
 
 {
@@ -218,7 +219,7 @@ Content-Type: application/json
 
 ### eliminar comentario
 DELETE http://localhost:3000/api/comments/1
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 
 
 
@@ -269,7 +270,7 @@ x-auth: {{user1_pass}}
 # NOTA: Crea una dependencia de integridad crítica con la Reseña 1.
 # Esperado: 201 Created.
 POST {{url}}/comments
-x-auth: Holamundo12345#
+x-auth: {{user3_pass}}
 Content-Type: application/json
 
 {

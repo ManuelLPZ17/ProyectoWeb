@@ -3,9 +3,10 @@ const { dbConnect } = require('./database/db.connector');
 const routerApi = require('./routes/api');
 const cors = require('cors');
 const path = require('path');
+const config = require('./config/config');
 
 const app = express();
-const port = 3000;
+const port = config.PORT;
 
 // ----------------------------------------
 // MIDDLEWARES GLOBALES
@@ -37,6 +38,14 @@ app.use((req, res) => {
 // ----------------------------------------
 // INICIAR SERVIDOR
 // ----------------------------------------
+try {
+    config.validateConfig(['DB_HOST', 'ADMIN_AUTH_KEY', 'TMDB_API_KEY']);
+} catch (err) {
+    console.error(`Error de configuración: ${err.message}`);
+    process.exitCode = 1;
+    return;
+}
+
 dbConnect().then(() => {
     app.listen(port, () => {
         console.log(`🚀 Servidor Express corriendo en http://localhost:${port}`);
